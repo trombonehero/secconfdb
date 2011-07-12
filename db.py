@@ -8,6 +8,11 @@ import conf
 connection = MySQLdb.connect(
 	host = 'localhost', db = 'secconfdb', user = 'secconfdb')
 
+connection.cursor().execute("""
+	SET NAMES utf8;
+	SET CHARACTER SET utf8;
+	SET character_set_connection=utf8;
+""")
 
 
 class Clause:
