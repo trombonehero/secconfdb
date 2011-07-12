@@ -6,20 +6,18 @@ X-WR-CALNAME:{{ title }}
 
 {% for (abbreviation, description, location, dates) in events %}
 BEGIN:VEVENT
-
 SUMMARY:{{ abbreviation }}
 DESCRIPTION:{{ description }}
 LOCATION:{{ location }}
-{% if dates.year %}
+{%- if dates.year %}
 DTSTART;VALUE=DATE:{{ dates.strftime("%Y%m%d") }}
 {% else %}
 DTSTART;VALUE=DATE:{{ dates[0].strftime("%Y%m%d") }}
-{%- if dates[0] != dates[1] %}
+{% if dates[0] != dates[1] -%}
 DTEND;VALUE=DATE:{{ (dates[1] + datetime.timedelta(1)).strftime("%Y%m%d") }}
 {% endif -%}
-{% endif %}
+{% endif -%}
 END:VEVENT
-
 {% endfor %}
 
 END:VCALENDAR
