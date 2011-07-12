@@ -81,6 +81,13 @@ class Filter(Clause):
 		Clause.__init__(self, "WHERE", value)
 
 	@classmethod
+	def recent(cls):
+		return Filter("""
+DATEDIFF(startDate, CURDATE()) < 0
+AND DATEDIFF(startDate, CURDATE()) >= -180
+""")
+
+	@classmethod
 	def upcoming(cls):
 		return Filter("""
 DATEDIFF(startDate, CURDATE()) >= 0
@@ -102,8 +109,9 @@ class Order(Clause):
 		Clause.__init__(self, "ORDER BY", value)
 
 	@classmethod
-	def start_date(cls):
-		return Order("startDate")
+	def start_date(cls, reverse = False):
+		if reverse: return Order("startDate DESC")
+		else: return Order("startDate")
 
 	@classmethod
 	def deadline(cls):
@@ -157,6 +165,6 @@ def upcoming():
 	return query.execute(connection.cursor())
 
 def recent():
-	query = Query(Filter.upcomingDeadlines(), Order.deadline())
+	query = Query(Filter.recent(), Order.start_date(reverse = True))
 	return query.execute(connection.cursor())
 
