@@ -36,6 +36,8 @@ def hello():
 	template = jinja.get_template('main.html')
 	return template.render(year = 2011,
 			deadlines = db.deadlines(),
+			upcoming = db.upcoming(),
+			recent = db.recent(),
 			soonness = soonness)
 
 

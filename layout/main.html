@@ -1,13 +1,11 @@
 {% extends "base.html" %}
 {% block title %}SECCONFDB{% endblock %}
 {% block footer %}
-<span class="filters"> 
-none (<a href="preferences.php#filters">change my filters</a>)
-</span> 
- 
+	<span class="filters"> 
+		none (<a href="preferences.php#filters">change my filters</a>)
+	</span> 
 	{{ super() }}
 {% endblock %}
-{% block content %}
 
 {% macro deadline_row(conference) %}
 <tr>
@@ -33,6 +31,31 @@ none (<a href="preferences.php#filters">change my filters</a>)
 </tr>
 {% endmacro %}
 
+{% macro upcoming_row(conference) %}
+<tr>
+	<td>
+		<a href="conference/{{ conference.abbreviation }}">
+			{{ conference.abbreviation }}
+		</a>
+	</td>
+	<td>{{ conference.when() }}</td>
+	<td>
+		{% if conference.url %}
+			<a href="{{ conference.url }}" target="_blank">
+		{% endif %}
+		{{ conference.where() }}
+		{% if conference.url %}</a>{% endif %}
+	</td>
+	<td>
+		{% if conference.url %}
+		<a href="{{ conference.url }}">permalink</a>
+		{% endif %}
+	</td>
+</tr>
+{% endmacro %}
+
+
+{% block content %}
 <div class="ical"> 
 	<img align="left" src="static/vcalendar-small.png"/> 
 	&#160;&#160;iCalendar format (no filters):
@@ -68,236 +91,23 @@ none (<a href="preferences.php#filters">change my filters</a>)
  
  
 <a name="upcoming"></a> 
-<h2>Upcoming Conferences</h2> 
- 
-<table class="conferences">			<thead>				<tr>					<th>Event</th> 
-			<th>Date(s)</th> 
-			<th>Location</th> 
-			<th>URLs</th> 
-		</tr> 
-	</thead> 
-	<tbody>				<tr> 
-<td><a href="conference?id=41" target="_blank">SOUPS</a></td> 
-<td>20 - 22 Jul 2011 </td> 
-<td><a href="http://cups.cs.cmu.edu/soups/2011/" target="_blank">Pittsburgh, PA, US</a></td> 
-<td><a href="http://cups.cs.cmu.edu/soups/" target="_blank">permalink</a></td></tr> 
-<tr> 
-<td><a href="conference?id=141" target="_blank">VizSec</a></td> 
-<td>20 Jul 2011</td> 
-<td><a href="http://www.vizsec2011.org/" target="_blank">Pittsburgh, PA, US</a></td> 
-<td><a href="http://www.vizsec.org/" target="_blank">permalink</a></td></tr> 
-<tr> 
-<td><a href="conference?id=113" target="_blank">ASONAM</a></td> 
-<td>25 - 27 Jul 2011 </td> 
-<td><a href="http://asonam.im.nuk.edu.tw/" target="_blank">Kaohsiung, TW</a></td> 
-</tr> 
-<tr> 
-<td><a href="conference?id=23" target="_blank">PETS</a></td> 
-<td>27 - 29 Jul 2011 </td> 
-<td><a href="http://petsymposium.org/2011/" target="_blank">Waterloo, ON, CA</a></td> 
-<td><a href="http://petsymposium.org/" target="_blank">permalink</a></td></tr> 
-<tr> 
-<td><a href="conference?id=69" target="_blank">HotPETs</a></td> 
-<td>27 - 29 Jul 2011 </td> 
-<td><a href="http://petsymposium.org/2011" target="_blank">Waterloo, ON, CA</a></td> 
-</tr> 
-<tr> 
-<td><a href="conference?id=35" target="_blank">WOTE</a></td> 
-<td>8 - 9 Aug 2011 </td> 
-<td><a href="http://www.usenix.org/events/evtwote11" target="_blank">San Francisco, CA, US</a></td> 
-</tr> 
-<tr> 
-<td><a href="conference?id=123" target="_blank">CSET</a></td> 
-<td>8 Aug 2011</td> 
-<td><a href="https://db.usenix.org/events/cset11/" target="_blank">San Francisco, CA, US</a></td> 
-</tr> 
-<tr> 
-<td><a href="conference?id=147" target="_blank">FOCI</a></td> 
-<td>8 Aug 2011</td> 
-<td><a href="http://www.usenix.org/events/foci11/" target="_blank">San Francisco, CA, US</a></td> 
-</tr> 
-<tr> 
-<td><a href="conference?id=149" target="_blank">WOOT</a></td> 
-<td>8 Aug 2011</td> 
-<td><a href="http://www.usenix.org/events/woot11/" target="_blank">San Francisco, CA, US</a></td> 
-</tr> 
-<tr> 
-<td><a href="conference?id=117" target="_blank">HotSec</a></td> 
-<td>9 Aug 2011</td> 
-<td><a href="http://www.usenix.org/events/hotsec11/" target="_blank">San Francisco, CA, US</a></td> 
-</tr> 
-<tr> 
-<td><a href="conference?id=119" target="_blank">HealthSec</a></td> 
-<td>9 Aug 2011</td> 
-<td><a href="http://www.usenix.org/events/healthsec11/" target="_blank">San Francisco, CA, US</a></td> 
-</tr> 
-<tr> 
-<td><a href="conference?id=151" target="_blank">MetriCon</a></td> 
-<td>9 Aug 2011</td> 
-<td><a href="http://www.securitymetrics.org/" target="_blank">San Francisco, CA, US</a></td> 
-<td><a href="http://www.securitymetrics.org" target="_blank">permalink</a></td></tr> 
-<tr> 
-<td><a href="conference?id=9" target="_blank">USENIX-SEC</a></td> 
-<td>10 - 12 Aug 2011 </td> 
-<td>San Francisco, CA, US</td> 
-<td><a href="http://www.usenix.org/events/" target="_blank">permalink</a></td></tr> 
-<tr> 
-<td><a href="conference?id=73" target="_blank">SAC</a></td> 
-<td>11 - 12 Aug 2011 </td> 
-<td><a href="http://sac2011.ryerson.ca/" target="_blank">Toronto, ON, CA</a></td> 
-<td><a href="http://www.cacr.math.uwaterloo.ca/~dstinson/SACworkshops.html" target="_blank">permalink</a></td></tr> 
-<tr> 
-<td><a href="conference?id=17" target="_blank">CRYPTO</a></td> 
-<td>14 - 18 Aug 2011 </td> 
-<td><a href="http://www.iacr.org/conferences/crypto2011/" target="_blank">Santa Barbara, CA, US</a></td> 
-<td><a href="http://www.iacr.org/conferences/" target="_blank">permalink</a></td></tr> 
-<tr> 
-<td><a href="conference?id=87" target="_blank">SIGCOMM</a></td> 
-<td>15 - 19 Aug 2011 </td> 
-<td><a href="http://conferences.sigcomm.org/sigcomm/2011/" target="_blank">Toronto, ON, CA</a></td> 
-<td><a href="http://conferences.sigcomm.org/sigcomm/" target="_blank">permalink</a></td></tr> 
-<tr> 
-<td><a href="conference?id=143" target="_blank">SECURWARE</a></td> 
-<td>21 - 27 Aug 2011 </td> 
-<td><a href="http://www.iaria.org/conferences2011/SECURWARE11.html" target="_blank">Nice, FR</a></td> 
-</tr> 
-<tr> 
-<td><a href="conference?id=137" target="_blank">ExtremeCom</a></td> 
-<td>26 - 30 Aug 2011 </td> 
-<td><a href="http://extremecom.org/2011" target="_blank">Manaus, BR</a></td> 
-<td><a href="http://extremecom.org/" target="_blank">permalink</a></td></tr> 
-<tr> 
-<td><a href="conference?id=101" target="_blank">CEAS</a></td> 
-<td>1 - 2 Sep 2011 </td> 
-<td><a href="http://ceas2011.debii.edu.au/" target="_blank">Perth, AU</a></td> 
-<td><a href="http://www.ceas.cc/" target="_blank">permalink</a></td></tr> 
-<tr> 
-<td><a href="conference?id=37" target="_blank">SecureComm</a></td> 
-<td>7 - 9 Sep 2011 </td> 
-<td><a href="http://www.securecomm.org/2011/" target="_blank">London, England, UK</a></td> 
-<td><a href="http://www.securecomm.org/" target="_blank">permalink</a></td></tr> 
-<tr> 
-<td><a href="conference?id=91" target="_blank">NSPW</a></td> 
-<td>12 - 15 Sep 2011 </td> 
-<td><a href="http://www.nspw.org/2011" target="_blank">San Francisco, CA, US</a></td> 
-<td><a href="http://www.nspw.org/" target="_blank">permalink</a></td></tr> 
-<tr> 
-<td><a href="conference?id=27" target="_blank">ESORICS</a></td> 
-<td>12 - 15 Sep 2011 </td> 
-<td>Leuven, BE</td> 
-<td><a href="http://www.laas.fr/~esorics/" target="_blank">permalink</a></td></tr> 
-<tr> 
-<td><a href="conference?id=29" target="_blank">CHES</a></td> 
-<td>25 - 28 Sep 2011 </td> 
-<td><a href="http://www.chesworkshop.org/ches2011/" target="_blank">Tokyo, JP</a></td> 
-<td><a href="http://www.chesworkshop.org/" target="_blank">permalink</a></td></tr> 
-<tr> 
-<td><a href="conference?id=5" target="_blank">ACM-CCS</a></td> 
-<td>17 - 21 Oct 2011 </td> 
-<td><a href="http://www.sigsac.org/ccs/CCS2011" target="_blank">Chicago, IL, US</a></td> 
-<td><a href="http://www.sigsac.org/ccs.html" target="_blank">permalink</a></td></tr> 
-<tr> 
-<td><a href="conference?id=63" target="_blank">WPES</a></td> 
-<td>17 Oct 2011</td> 
-<td><a href="http://wpes11.rutgers.edu/" target="_blank">Chicago, IL, US</a></td> 
-</tr> 
-<tr> 
-<td><a href="conference?id=115" target="_blank">Malware</a></td> 
-<td>18 - 19 Oct 2011 </td> 
-<td><a href="http://www.malware2009.org/index.php?option=com_content&task=category&sectionid=3&id=18&Itemid=33" target="_blank">Fajardo, PR</a></td> 
-<td><a href="http://www.malware2009.org/index.php?option=com_docman&Itemid=53" target="_blank">permalink</a></td></tr> 
-<tr> 
-<td><a href="conference?id=97" target="_blank">SOSP</a></td> 
-<td>23 - 26 Oct 2011 </td> 
-<td><a href="http://www.sigops.org/sosp/sosp11/" target="_blank">Cascais, PT</a></td> 
-<td><a href="http://www.sigops.org/sosp/" target="_blank">permalink</a></td></tr> 
-<tr> 
-<td><a href="conference?id=43" target="_blank">NordSec</a></td> 
-<td>26 - 28 Oct 2011 </td> 
-<td><a href="http://nordsec2011.cyber.ee/" target="_blank">Tallinn, EE</a></td> 
-<td><a href="http://www.cse.chalmers.se/research/group/security/nordsec/contents.html" target="_blank">permalink</a></td></tr> 
-<tr> 
-<td><a href="conference?id=51" target="_blank">APWG-EC</a></td> 
-<td>7 - 9 Nov 2011 </td> 
-<td><a href="http://www.ecrimeresearch.org/2011/" target="_blank">San Diego, CA, US</a></td> 
-<td><a href="http://www.antiphishing.org/ecrimeresearch/index.html" target="_blank">permalink</a></td></tr> 
-<tr> 
-<td><a href="conference?id=109" target="_blank">IEEE-WIFS</a></td> 
-<td>16 - 19 Nov 2011 </td> 
-<td><a href="http://wifs11.org/" target="_blank">Foz do Iguaçu, BR</a></td> 
-</tr> 
-<tr> 
-<td><a href="conference?id=131" target="_blank">ASIACRYPT</a></td> 
-<td>4 - 8 Dec 2011 </td> 
-<td><a href="http://cist.korea.ac.kr/~asiacrypt2011/" target="_blank">Seoul, KR</a></td> 
-<td><a href="http://www.iacr.org/conferences/" target="_blank">permalink</a></td></tr> 
-<tr> 
-<td><a href="conference?id=99" target="_blank">ACSAC</a></td> 
-<td>5 - 9 Dec 2011 </td> 
-<td><a href="http://acsac.org/2011" target="_blank">Orlando, FL, US</a></td> 
-<td><a href="http://www.acsac.org/" target="_blank">permalink</a></td></tr> 
-<tr> 
-<td><a href="conference?id=139" target="_blank">LAW</a></td> 
-<td>5 - 9 Dec 2011 </td> 
-<td><a href="http://www.acsac.org/2011/workshops/law/" target="_blank">Orlando, FL, US</a></td> 
-<td><a href="http://fm.csl.sri.com/LAW/" target="_blank">permalink</a></td></tr> 
-<tr> 
-<td><a href="conference?id=57" target="_blank">IFIP-WG11.9</a></td> 
-<td>3 - 5 Jan 2012 </td> 
-<td>Pretoria, ZA</td> 
-<td><a href="http://www.ifip119.org/Conferences/" target="_blank">permalink</a></td></tr> 
-<tr> 
-<td><a href="conference?id=13" target="_blank">NDSS</a></td> 
-<td>5 Feb - 8 May 2012 </td> 
-<td><a href="http://www.isoc.org/isoc/conferences/ndss/12/" target="_blank">San Diego, CA, US</a></td> 
-<td><a href="http://www.isoc.org/isoc/conferences/ndss/" target="_blank">permalink</a></td></tr> 
-<tr> 
-<td><a href="conference?id=45" target="_blank">CT-RSA</a></td> 
-<td>27 Feb - 2 Mar 2012 </td> 
-<td><a href="http://ctrsa2012.cs.haifa.ac.il/" target="_blank">San Francisco, CA, US</a></td> 
-<td><a href="http://www.informatik.uni-trier.de/~ley/db/conf/ctrsa/index.html" target="_blank">permalink</a></td></tr> 
-<tr> 
-<td><a href="conference?id=15" target="_blank">FC</a></td> 
-<td>27 Feb - 2 Mar 2012 </td> 
-<td><a href="http://fc12.ifca.ai/" target="_blank">Bonaire, NL</a></td> 
-<td><a href="http://www.ifca.ai/" target="_blank">permalink</a></td></tr> 
-<tr> 
-<td><a href="conference?id=145" target="_blank">ASPLOS</a></td> 
-<td>3 - 7 Mar 2012 </td> 
-<td><a href="http://research.microsoft.com/en-us/um/cambridge/events/asplos_2012/" target="_blank">London, England, UK</a></td> 
-<td><a href="http://www.sigplan.org/asplos.htm" target="_blank">permalink</a></td></tr> 
-<tr> 
-<td><a href="conference?id=71" target="_blank">FSE</a></td> 
-<td>19 - 20 Mar 2012 </td> 
-<td><a href="http://fse2012.inria.fr/" target="_blank">Washington, DC, US</a></td> 
-<td><a href="http://www2.mat.dtu.dk/people/Lars.R.Knudsen/fse/" target="_blank">permalink</a></td></tr> 
-<tr> 
-<td><a href="conference?id=67" target="_blank">IEEE-WCNC</a></td> 
-<td>1 - 4 Apr 2012 </td> 
-<td><a href="http://www.ieee-wcnc.org/2012/" target="_blank">Paris, FR</a></td> 
-<td><a href="http://www.ieee-wcnc.org/" target="_blank">permalink</a></td></tr> 
-<tr> 
-<td><a href="conference?id=77" target="_blank">EuroSys</a></td> 
-<td>10 - 13 Apr 2012 </td> 
-<td><a href="http://eurosys2012.unibe.ch/" target="_blank">Bern, CH</a></td> 
-<td><a href="http://www.eurosys.org/" target="_blank">permalink</a></td></tr> 
-<tr> 
-<td><a href="conference?id=103" target="_blank">NSDI</a></td> 
-<td>25 - 27 Apr 2012 </td> 
-<td><a href="http://usenix.org/events/nsdi12/" target="_blank">San Jose, CA, US</a></td> 
-<td><a href="http://www.usenix.org/event/bytopic/nsdi.html" target="_blank">permalink</a></td></tr> 
-<tr> 
-<td><a href="conference?id=135" target="_blank">BSDCan</a></td> 
-<td>11 - 12 May 2012 </td> 
-<td><a href="http://www.bsdcan.org/2012" target="_blank">Ottawa, ON, CA</a></td> 
-<td><a href="http://www.bsdcan.org/" target="_blank">permalink</a></td></tr> 
-<tr> 
-<td><a href="conference?id=65" target="_blank">ACNS</a></td> 
-<td>26 - 29 Jun 2012 </td> 
-<td><a href="http://icsd.i2r.a-star.edu.sg/acns2012/" target="_blank">Singapore, SG</a></td> 
-<td><a href="http://icsd.i2r.a-star.edu.sg/staff/jianying/acns_home/" target="_blank">permalink</a></td></tr> 
-	</tbody> 
-</table> 
+<h2>Upcoming Conferences</h2>
+
+<table class="conferences">
+	<thead>
+		<tr>
+			<th>Event</th>
+			<th>Date(s)</th>
+			<th>Location</th>
+			<th>URLs</th>
+		</tr>
+	</thead>
+	<tbody>
+		{% for conference in upcoming %}
+			{{ upcoming_row(conference) }}
+		{% endfor %}
+	</tbody>
+</table>
  
  
 <a name="recent"></a> 
