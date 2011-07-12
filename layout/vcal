@@ -1,17 +1,25 @@
 BEGIN:VCALENDAR
 VERSION:2.0
 METHOD:PUBLISH
-PRODID:-//securityconferences.net//Upcoming Conferences//EN
-X-WR-CALNAME:Security Conferences
+PRODID:-//securityconferences.net//{{ title }}//EN
+X-WR-CALNAME:{{ title }}
 
-{% for event in events %}
+{% for (abbreviation, description, location, dates) in events %}
 BEGIN:VEVENT
-SUMMARY:{{ event.abbreviation }}
-DESCRIPTION:{{ event.name }}
-LOCATION:{{ event.where() }}
-DTSTART;VALUE=DATE:{{ event.startDate.strftime("%Y%m%d") }}
-DTEND;VALUE=DATE:{{ (event.endDate + datetime.timedelta(1)).strftime("%Y%m%d") }}
+
+SUMMARY:{{ abbreviation }}
+DESCRIPTION:{{ description }}
+LOCATION:{{ location }}
+{% if dates.year %}
+DTSTART;VALUE=DATE:{{ dates.strftime("%Y%m%d") }}
+{% else %}
+DTSTART;VALUE=DATE:{{ dates[0].strftime("%Y%m%d") }}
+{%- if dates[0] != dates[1] %}
+DTEND;VALUE=DATE:{{ (dates[1] + datetime.timedelta(1)).strftime("%Y%m%d") }}
+{% endif -%}
+{% endif %}
 END:VEVENT
+
 {% endfor %}
 
 END:VCALENDAR
