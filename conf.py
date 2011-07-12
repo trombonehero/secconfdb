@@ -29,7 +29,8 @@ class ConferenceInstance:
 
 	def where(self):
 		location = (self.location, self.region, self.country)
-		return ", ".join([ i for i in location if i is not None ])
+		return ", ".join(
+			[ unicode(i, "utf8") for i in location if i is not None ])
 
 
 	def format_deadline(self, which = None):
