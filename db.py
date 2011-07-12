@@ -47,7 +47,7 @@ class Fields(Clause):
 	def default(cls):
 		return Fields(
 			[
-				"url", "conference", "abbreviation", "Conferences.name",
+				"url", "conference", "abbreviation", "Conferences.name AS name",
 				"startDate", "endDate",
 				"deadline", "extendedDeadline", "posterDeadline",
 				"Locations.name AS location",
