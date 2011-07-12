@@ -43,12 +43,16 @@ def calendar():
 	template = jinja.get_template('vcal')
 	return template.render(events = db.defaultQuery(), datetime = datetime)
 
+
+# Conference info, either by ID or by abbreviation.
 @app.route('/conference/<int:conf_id>')
-def conference(conf_id):
+def confernece(conf_id):
 	return "Let's look up conference %d" % conf_id
 
+@app.route('/conference/<string:abbreviation>')
+def conference(abbreviation):
+	return "Let's look up conference '%s'" % abbreviation
+
 if __name__ == '__main__':
-	for conf in db.defaultQuery():
-		print repr(conf)
 	app.run(debug = True)
 
