@@ -2,6 +2,26 @@
 {% block title %}SECCONFDB{% endblock %}
 {% block content %}
 
+{% macro deadline_row(conference) %}
+<tr>
+	<td class="{{ soonness(conference.deadline) }}">
+		{{ conference.format_deadline() }}
+	</td>
+	<td class="{{ soonness(conference.posterDeadline) }}">
+		{{ conference.format_deadline("poster") }}
+	</td>
+	<td>{{ conference.abbreviation }}</td>
+	<td>{{ conference.when() }}</td>
+	<td>
+		{% if conference.url %}
+			<a href="{{ conference.url }}" target="_blank">
+		{% endif %}
+		{{ conference.where() }}
+		{% if conference.url %}</a>{% endif %}
+	</td>
+</tr>
+{% endmacro %}
+
 <div class="ical"> 
 	<img align="left" src="static/vcalendar-small.png"/> 
 	&#160;&#160;iCalendar format (no filters):
@@ -33,149 +53,11 @@ none (<a href="preferences.php#filters">change my filters</a>)
 	</thead> 
 	<tbody>
 		{% for conference in conferences %}
-			<tr>
-				<td>{{ conference.format_deadline() }}</td>
-				<td>{{ conference.format_deadline("poster") }}</td>
-				<td>{{ conference.abbreviation }}</td>
-				<td>{{ conference.when() }}</td>
-				<td>{{ conference.where() }}</td>
-			</tr>
+			{{ deadline_row(conference) }}
 		{% endfor %}
 	</tbody>
 </table>
 
-<!--
-	tbody> 
-	
- 
-<tr> 
-<td class="tooLate">2011-06-30</td> 
-<td></td> 
-<td><a href="conference?id=115">Malware</a></td> 
-<td>18 - 19 Oct 2011 </td> 
-<td><a href="http://www.malware2009.org/index.php?option=com_content&task=category&sectionid=3&id=18&Itemid=33" target="_blank">Fajardo, PR</a></td> 
-</tr> 
-<tr> 
-<td class="tooLate">2011-07-02</td> 
-<td></td> 
-<td><a href="conference?id=63">WPES</a></td> 
-<td>17 Oct 2011</td> 
-<td><a href="http://wpes11.rutgers.edu/" target="_blank">Chicago, IL, US</a></td> 
-</tr> 
-<tr> 
-<td class="tooLate">2011-02-10</td> 
-<td class="reallySoon">2011-07-11</td> 
-<td><a href="conference?id=9">USENIX-SEC</a></td> 
-<td>10 - 12 Aug 2011 </td> 
-<td>San Francisco, CA, US</td> 
-</tr> 
-<tr> 
-<td class="reallySoon">2011-07-18</td> 
-<td></td> 
-<td><a href="conference?id=145">ASPLOS</a></td> 
-<td>3 - 7 Mar 2012 </td> 
-<td><a href="http://research.microsoft.com/en-us/um/cambridge/events/asplos_2012/" target="_blank">London, England, UK</a></td> 
-</tr> 
-<tr> 
-<td class="reallySoon">2011-07-21</td> 
-<td class="notSoon">2011-08-29</td> 
-<td><a href="conference?id=51">APWG-EC</a></td> 
-<td>7 - 9 Nov 2011 </td> 
-<td><a href="http://www.ecrimeresearch.org/2011/" target="_blank">San Diego, CA, US</a></td> 
-</tr> 
-<tr> 
-<td class="soon">2011-07-31</td> 
-<td class="notSoon">2011-09-01</td> 
-<td><a href="conference?id=43">NordSec</a></td> 
-<td>26 - 28 Oct 2011 </td> 
-<td><a href="http://nordsec2011.cyber.ee/" target="_blank">Tallinn, EE</a></td> 
-</tr> 
-<tr> 
-<td class="notSoon">2011-08-09</td> 
-<td></td> 
-<td><a href="conference?id=13">NDSS</a></td> 
-<td>5 Feb - 8 May 2012 </td> 
-<td><a href="http://www.isoc.org/isoc/conferences/ndss/12/" target="_blank">San Diego, CA, US</a></td> 
-</tr> 
-<tr> 
-<td class="tooLate">2011-03-11</td> 
-<td class="notSoon">2011-08-12</td> 
-<td><a href="conference?id=97">SOSP</a></td> 
-<td>23 - 26 Oct 2011 </td> 
-<td><a href="http://www.sigops.org/sosp/sosp11/" target="_blank">Cascais, PT</a></td> 
-</tr> 
-<tr> 
-<td class="notSoon">2011-08-29</td> 
-<td></td> 
-<td><a href="conference?id=45">CT-RSA</a></td> 
-<td>27 Feb - 2 Mar 2012 </td> 
-<td><a href="http://ctrsa2012.cs.haifa.ac.il/" target="_blank">San Francisco, CA, US</a></td> 
-</tr> 
-<tr> 
-<td class="tooLate">2011-06-06</td> 
-<td class="notSoon">2011-09-02</td> 
-<td><a href="conference?id=99">ACSAC</a></td> 
-<td>5 - 9 Dec 2011 </td> 
-<td><a href="http://acsac.org/2011" target="_blank">Orlando, FL, US</a></td> 
-</tr> 
-<tr> 
-<td class="notSoon">2011-09-12</td> 
-<td></td> 
-<td><a href="conference?id=67">IEEE-WCNC</a></td> 
-<td>1 - 4 Apr 2012 </td> 
-<td><a href="http://www.ieee-wcnc.org/2012/" target="_blank">Paris, FR</a></td> 
-</tr> 
-<tr> 
-<td class="notSoon">2011-09-15</td> 
-<td></td> 
-<td><a href="conference?id=57">IFIP-WG11.9</a></td> 
-<td>3 - 5 Jan 2012 </td> 
-<td>Pretoria, ZA</td> 
-</tr> 
-<tr> 
-<td class="notSoon">2011-09-15</td> 
-<td>2011-12-02</td> 
-<td><a href="conference?id=15">FC</a></td> 
-<td>27 Feb - 2 Mar 2012 </td> 
-<td><a href="http://fc12.ifca.ai/" target="_blank">Bonaire, NL</a></td> 
-</tr> 
-<tr> 
-<td class="notSoon">2011-09-20</td> 
-<td></td> 
-<td><a href="conference?id=77">EuroSys</a></td> 
-<td>10 - 13 Apr 2012 </td> 
-<td><a href="http://eurosys2012.unibe.ch/" target="_blank">Bern, CH</a></td> 
-</tr> 
-<tr> 
-<td class="notSoon">2011-09-27</td> 
-<td></td> 
-<td><a href="conference?id=103">NSDI</a></td> 
-<td>25 - 27 Apr 2012 </td> 
-<td><a href="http://usenix.org/events/nsdi12/" target="_blank">San Jose, CA, US</a></td> 
-</tr> 
-<tr> 
-<td>2011-11-17</td> 
-<td></td> 
-<td><a href="conference?id=71">FSE</a></td> 
-<td>19 - 20 Mar 2012 </td> 
-<td><a href="http://fse2012.inria.fr/" target="_blank">Washington, DC, US</a></td> 
-</tr> 
-<tr> 
-<td>2011-12-19</td> 
-<td></td> 
-<td><a href="conference?id=135">BSDCan</a></td> 
-<td>11 - 12 May 2012 </td> 
-<td><a href="http://www.bsdcan.org/2012" target="_blank">Ottawa, ON, CA</a></td> 
-</tr> 
-<tr> 
-<td>2012-02-05</td> 
-<td></td> 
-<td><a href="conference?id=65">ACNS</a></td> 
-<td>26 - 29 Jun 2012 </td> 
-<td><a href="http://icsd.i2r.a-star.edu.sg/acns2012/" target="_blank">Singapore, SG</a></td> 
-</tr> 
-	</tbody> 
-</table> 
  
  
 <a name="upcoming"></a> 
@@ -760,11 +642,4 @@ none (<a href="preferences.php#filters">change my filters</a>)
 </table> 
 </div> 
  
-<a name="maintainer"></a> 
-<h2>Maintainence</h2> 
-<p> 
-This service is maintained by <a href="http://www.cl.cam.ac.uk/~jra40/">Jonathan Anderson</a>. You can contact me by e-mailing [my first name].[my last name]@cl.cam.ac.uk.
-</p> 
- 
--->
 {% endblock %}

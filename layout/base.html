@@ -8,19 +8,21 @@
  
  
 	<body> 
-		<img src="static/padlock-128.png" align="left"/> 
-		<h1>securityconferences.net</h1> 
-		<h2>{{ self.title() }}</h2>
+		<div id="header">
+			<!--
+			<img src="static/padlock-128.png" align="left"/> 
+			-->
+			<h1>securityconferences.net</h1> 
+			<h2>{{ self.title() }}</h2>
+		</div>
  
 		<div id="content"> 
 			{% block content %}{% endblock %}
 		</div>
 
 		<div id="footer">
-			{% block footer %}
 			&copy; Copyright {{ year }}
 			<a href="mailto:jonathan.anderson@cl.cam.ac.uk">Jonathan Anderson</a>.
-			{% endblock %}
 		</div>
 	</body> 
 </html> 

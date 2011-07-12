@@ -2,31 +2,89 @@ html
 {
 	background: #9eadc0;
 	font-family: sans-serif;
+	font-size: smaller;
+	padding: 0;
 }
 
-h1,h2,a
+body
 {
-	color: #1c3553;
+	padding: 0;
 }
 
-a:hover
+#header
 {
-	color: #7f6b2a;
-}
+	background: #6d5b85;
+	color: white;
 
-a
-{
-	font-weight: bold;
-	text-decoration: none;
+	border-bottom: solid 1px black;
+
+	position: fixed;
+	top: 0;
+	left: 0;
+
+	line-height: 1em;
+	width: 100%;
 }
 
 #content
 {
+	margin-top: 4em;
+	margin-bottom: 2em;
 }
 
 #footer
 {
-	margin-top: 1em;
+	background: #6d5b85;
+	color: white;
+
+	border-top: solid 1px black;
+
+	position: fixed;
+	left: 0;
+	bottom: 0;
+
+	line-height: 1.5em;
+	padding-left: .5em;
+	width: 100%;
+}
+
+
+#header h1
+{
+	position: absolute;
+	right: 0.5em;
+}
+
+#header h2
+{
+	margin-left: 0.5em;
+}
+
+#content h2
+{
+	color: #1c3553;
+}
+
+#content a:hover
+{
+	color: #7f6b2a;
+}
+
+#footer a
+{
+	color: #a894c2;
+}
+
+#footer a:hover
+{
+	color: #e2d7b6;
+}
+
+a
+{
+	color: #1c3553;
+	font-weight: bold;
+	text-decoration: none;
 }
 
 input
@@ -44,13 +102,13 @@ table.conferences
 
 table.conferences th, .sidebar th
 {
-	background: #6d5b85;
+	background: #1c3553;
 	color: white;
 }
 
 table.conferences a
 {
-	color: #361e56;
+	color: #1c3553;
 }
 
 

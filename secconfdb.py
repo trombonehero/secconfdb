@@ -16,11 +16,26 @@ row = jinja2.Template('''
 </tr>
 ''')
 
+
+def soonness(date):
+	""" Translate a deadline into a CSS class like 'reallySoon'. """
+	if date is None: return "dateUnspecified"
+
+	days_left = (date - datetime.date.today()).days
+	for (days, category) in (
+			(0, 'tooLate'),
+			(7, 'reallySoon'),
+			(28, 'soon'),
+			(90, 'notSoon')):
+		if days_left < days: return category
+
+	return ""
+
 @app.route('/')
 def hello():
 	template = jinja.get_template('main.html')
-	return template.render(conferences = db.defaultQuery(), year = 2011)
-
+	return template.render(conferences = db.defaultQuery(),
+			year = 2011, soonness = soonness)
 
 
 @app.route('/calendar.ics')
