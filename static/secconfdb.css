@@ -86,6 +86,12 @@ body
 	color: #e2d7b6;
 }
 
+#footer #copyright
+{
+	float: right;
+	margin-right: 1em;
+}
+
 a
 {
 	color: #1c3553;
