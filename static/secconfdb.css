@@ -30,6 +30,11 @@ body
 {
 	margin-top: 4em;
 	margin-bottom: 2em;
+
+	background-image: url('padlock-128.png');
+	background-repeat: no-repeat;
+	background-position: left 4em;
+	background-attachment: fixed;
 }
 
 #footer
