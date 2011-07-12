@@ -77,6 +77,10 @@ class Filter(Clause):
 
 	@classmethod
 	def upcoming(cls):
+		return Filter("DATEDIFF(startDate, CURDATE()) >= 0")
+
+	@classmethod
+	def upcomingDeadlines(cls):
 		return Filter("""
 (
 	(DATEDIFF(deadline, CURDATE()) >= -14)
@@ -133,11 +137,11 @@ class Query:
 
 
 def deadlines():
-	return Query(Filter.upcoming()).execute(connection.cursor())
+	return Query(Filter.upcomingDeadlines()).execute(connection.cursor())
 
 def upcoming():
 	return Query(Filter.upcoming()).execute(connection.cursor())
 
 def recent():
-	return Query(Filter.upcoming()).execute(connection.cursor())
+	return Query(Filter.upcomingDeadlines()).execute(connection.cursor())
 
