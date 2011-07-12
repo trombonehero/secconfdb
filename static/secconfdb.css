@@ -166,19 +166,6 @@ hr
 	color: #acf;
 }
 
-.filters
-{
-	background: #ddd;
-	border: 1px solid;
-	font-size: smaller;
-	margin-left: auto;
-	margin-right: auto;
-	padding: .5em;
-	padding-left: 1em;
-	padding-right: 1em;
-	width: 50%;
-}
-
 .filters:before
 {
 	content: "Filters: ";

@@ -1,5 +1,12 @@
 {% extends "base.html" %}
 {% block title %}SECCONFDB{% endblock %}
+{% block footer %}
+<span class="filters"> 
+none (<a href="preferences.php#filters">change my filters</a>)
+</span> 
+ 
+	{{ super() }}
+{% endblock %}
 {% block content %}
 
 {% macro deadline_row(conference) %}
@@ -33,10 +40,6 @@
 	&#160;&#160;<a href="calendar.ics">conference dates</a> 
 	|
 	<a href="deadlines.ics">deadlines</a> 
-</div> 
- 
-<div class="filters"> 
-none (<a href="preferences.php#filters">change my filters</a>)
 </div> 
  
 <a name="deadlines"></a> 
