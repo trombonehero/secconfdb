@@ -11,6 +11,8 @@ connection = MySQLdb.connect(
 
 
 class Clause:
+	""" A clause in a SQL query (e.g. SELECT, ORDER BY, ...). """
+
 	def __init__(self, operator, value):
 		""" 'operator' may not be None, but 'value' may. """
 		assert operator != None
@@ -107,8 +109,10 @@ CASE
 class Query:
 	fields = Fields.default()
 	source = Source.default()
-	where = Filter.upcoming()
 	order = Order.default()
+
+	def __init__(self, instanceFilter):
+		self.where = instanceFilter
 
 	def execute(self, cursor):
 		cursor.execute(self.__str__())
@@ -129,5 +133,5 @@ class Query:
 
 
 def defaultQuery():
-	return Query().execute(connection.cursor())
+	return Query(Filter.upcoming()).execute(connection.cursor())
 
