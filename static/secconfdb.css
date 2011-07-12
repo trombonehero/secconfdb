@@ -68,6 +68,7 @@ body
 #content h2
 {
 	color: #1c3553;
+	text-align: center;
 }
 
 #content a:hover
