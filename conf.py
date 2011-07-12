@@ -1,3 +1,5 @@
+import re
+
 class ConferenceInstance:
 	def __init__(self, data):
 		assert data is not None
@@ -42,6 +44,15 @@ class ConferenceInstance:
 
 		if date is None: return ""
 		return date.strftime("%d %b %Y").lstrip("0")
+
+
+	def proceedings_site(self):
+		""" Return the hostname that proceedings can be found on. """
+		if self.proceedings is None: return None
+
+		return re.sub("/.*$", "",
+			re.sub("^[a-z]+://", "", self.proceedings))
+
 
 
 	def __str__(self):
