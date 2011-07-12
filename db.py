@@ -82,7 +82,10 @@ class Filter(Clause):
 
 	@classmethod
 	def upcoming(cls):
-		return Filter("DATEDIFF(startDate, CURDATE()) >= 0")
+		return Filter("""
+DATEDIFF(startDate, CURDATE()) >= 0
+AND DATEDIFF(startDate, CURDATE()) <= 180
+""")
 
 	@classmethod
 	def upcomingDeadlines(cls):
@@ -99,7 +102,11 @@ class Order(Clause):
 		Clause.__init__(self, "ORDER BY", value)
 
 	@classmethod
-	def default(cls):
+	def start_date(cls):
+		return Order("startDate")
+
+	@classmethod
+	def deadline(cls):
 		return Order("""
 CASE
         WHEN (DATEDIFF(deadline, CURDATE()) < -14)
@@ -118,10 +125,10 @@ CASE
 class Query:
 	fields = Fields.default()
 	source = Source.default()
-	order = Order.default()
 
-	def __init__(self, instanceFilter):
-		self.where = instanceFilter
+	def __init__(self, filter, order):
+		self.where = filter
+		self.order = order
 
 	def execute(self, cursor):
 		cursor.execute(self.__str__())
@@ -142,11 +149,14 @@ class Query:
 
 
 def deadlines():
-	return Query(Filter.upcomingDeadlines()).execute(connection.cursor())
+	query = Query(Filter.upcomingDeadlines(), Order.deadline())
+	return query.execute(connection.cursor())
 
 def upcoming():
-	return Query(Filter.upcoming()).execute(connection.cursor())
+	query = Query(Filter.upcoming(), Order.start_date())
+	return query.execute(connection.cursor())
 
 def recent():
-	return Query(Filter.upcomingDeadlines()).execute(connection.cursor())
+	query = Query(Filter.upcomingDeadlines(), Order.deadline())
+	return query.execute(connection.cursor())
 
