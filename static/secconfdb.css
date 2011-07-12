@@ -187,14 +187,18 @@ hr
 
 .ical
 {
-	background: #cef;
-	border: 1px solid #004ea7;
+	background: #e2d7b6;
+	border: 1px solid #1c3553;
 	float: right;
 	font-size: smaller;
 	padding: .5em;
 	padding-left: 1em;
 	padding-right: 1em;
 	width: 20em;
+
+	position: fixed;
+	right: 1em;
+	top: 5em;
 }
 
 .emphasise
