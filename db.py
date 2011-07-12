@@ -132,6 +132,12 @@ class Query:
 
 
 
-def defaultQuery():
+def deadlines():
+	return Query(Filter.upcoming()).execute(connection.cursor())
+
+def upcoming():
+	return Query(Filter.upcoming()).execute(connection.cursor())
+
+def recent():
 	return Query(Filter.upcoming()).execute(connection.cursor())
 

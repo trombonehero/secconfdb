@@ -34,7 +34,7 @@ def soonness(date):
 @app.route('/')
 def hello():
 	template = jinja.get_template('main.html')
-	return template.render(conferences = db.defaultQuery(),
+	return template.render(conferences = db.deadlines(),
 			year = 2011, soonness = soonness)
 
 
