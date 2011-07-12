@@ -10,7 +10,11 @@
 	<td class="{{ soonness(conference.posterDeadline) }}">
 		{{ conference.format_deadline("poster") }}
 	</td>
-	<td>{{ conference.abbreviation }}</td>
+	<td>
+		<a href="conference/{{ conference.abbreviation }}">
+			{{ conference.abbreviation }}
+		</a>
+	</td>
 	<td>{{ conference.when() }}</td>
 	<td>
 		{% if conference.url %}
