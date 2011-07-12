@@ -7,50 +7,46 @@
 	{{ super() }}
 {% endblock %}
 
-{% macro deadline_row(conference) %}
-<tr>
-	<td class="{{ soonness(conference.deadline) }}">
-		{{ conference.format_deadline() }}
-	</td>
-	<td class="{{ soonness(conference.posterDeadline) }}">
-		{{ conference.format_deadline("poster") }}
-	</td>
-	<td>
-		<a href="conference/{{ conference.abbreviation }}">
-			{{ conference.abbreviation }}
-		</a>
-	</td>
-	<td>{{ conference.when() }}</td>
-	<td>
-		{% if conference.url %}
-			<a href="{{ conference.url }}" target="_blank">
-		{% endif %}
-		{{ conference.where() }}
-		{% if conference.url %}</a>{% endif %}
-	</td>
-</tr>
-{% endmacro %}
 
-{% macro upcoming_row(conference) %}
+<!--
+Render an event as a table row, possibly including deadlines and proceedings.
+-->
+{% macro event_row(event, show_deadlines = True, show_proceedings = False) %}
 <tr>
+	{% if show_deadlines %}
+	<td class="{{ soonness(event.deadline) }}">
+		{{ event.format_deadline() }}
+	</td>
+	<td class="{{ soonness(event.posterDeadline) }}">
+		{{ event.format_deadline("poster") }}
+	</td>
+	{% endif %}
 	<td>
-		<a href="conference/{{ conference.abbreviation }}">
-			{{ conference.abbreviation }}
+		<a href="conference/{{ event.abbreviation }}">
+			{{ event.abbreviation }}
 		</a>
 	</td>
-	<td>{{ conference.when() }}</td>
+	<td>{{ event.when() }}</td>
 	<td>
-		{% if conference.url %}
-			<a href="{{ conference.url }}" target="_blank">
+		{% if event.url %}
+			<a href="{{ event.url }}" target="_blank">
 		{% endif %}
-		{{ conference.where() }}
-		{% if conference.url %}</a>{% endif %}
+		{{ event.where() }}
+		{% if event.url %}</a>{% endif %}
 	</td>
-	<td>
-		{% if conference.url %}
-		<a href="{{ conference.url }}">permalink</a>
-		{% endif %}
-	</td>
+	{% if show_proceedings %}
+		<td>
+			{% if event.proceedings %}
+				<a href="{{ event.proceedings }}">
+					{{ event.proceedings_site() }}
+				</a>
+				|
+			{% endif %}
+			<a href="http://scholar.google.com/scholar?as_publication={{ event.name }}&as_ylo={{ event.startDate.year }}&as_yhi={{ event.endDate.year }}" target="_blank">
+				scholar.google.com
+			</a>
+		</td>
+	{% endif %}
 </tr>
 {% endmacro %}
 
@@ -83,7 +79,7 @@
 	</thead> 
 	<tbody>
 		{% for conference in deadlines %}
-			{{ deadline_row(conference) }}
+			{{ event_row(conference) }}
 		{% endfor %}
 	</tbody>
 </table>
@@ -99,12 +95,11 @@
 			<th>Event</th>
 			<th>Date(s)</th>
 			<th>Location</th>
-			<th>URLs</th>
 		</tr>
 	</thead>
 	<tbody>
 		{% for conference in upcoming %}
-			{{ upcoming_row(conference) }}
+			{{ event_row(conference, show_deadlines = False) }}
 		{% endfor %}
 	</tbody>
 </table>
@@ -112,351 +107,22 @@
  
 <a name="recent"></a> 
 <h2>Recent Conferences</h2> 
- 
-<table class="conferences">			<thead>				<tr>					<th>Event</th> 
-			<th>Date(s)</th> 
-			<th>Location</th> 
-			<th>Proceedings</th> 
-			<th>URLs</th> 
-		</tr> 
-	</thead> 
-	<tbody>				<tr> 
-<td><a href="conference?id=93">BCS-HCI</a></td> 
-<td>4 - 8 Jul 2011 </td> 
-<td><a href="http://hci2011.co.uk/" target="_blank">Newcastle Upon Tyne, UK</a></td> 
-<td><a href="http://scholar.google.com/scholar?as_publication=Human-Computer Interaction&as_ylo=2011&as_yhi=2011" target="_blank">scholar.google.com</a></td><td><a href="http://www.bcs-hci.org.uk/" target="_blank">permalink</a></td></tr> 
-<tr> 
-<td><a href="conference?id=81">ASA</a></td> 
-<td>30 Jun 2011</td> 
-<td><a href="http://www.lsv.ens-cachan.fr/~steel/asa5/" target="_blank">Paris, FR</a></td> 
-<td><a href="http://scholar.google.com/scholar?as_publication=Analysis of Security APIs&as_ylo=2011&as_yhi=2011" target="_blank">scholar.google.com</a></td><td><a href="http://homepages.inf.ed.ac.uk/gsteel/asa/" target="_blank">permalink</a></td></tr> 
-<tr> 
-<td><a href="conference?id=83">CSF</a></td> 
-<td>27 - 29 Jun 2011 </td> 
-<td><a href="http://csf2011.inria.fr/" target="_blank">Domaine de l'Abbaye des Vaux de Cernay, FR</a></td> 
-<td><a href="http://scholar.google.com/scholar?as_publication=IEEE Computer Security Foundations Symposium&as_ylo=2011&as_yhi=2011" target="_blank">scholar.google.com</a></td><td><a href="http://www.ieee-security.org/CSFWweb/" target="_blank">permalink</a></td></tr> 
-<tr> 
-<td><a href="conference?id=89">Trust</a></td> 
-<td>22 - 24 Jun 2011 </td> 
-<td><a href="http://www.trust2011.org/" target="_blank">Pittsburgh, PA, US</a></td> 
-<td><a href="http://scholar.google.com/scholar?as_publication=International Conference on the Technical and Socio-Economic Aspects of Trusted Computing&as_ylo=2011&as_yhi=2011" target="_blank">scholar.google.com</a></td></tr> 
-<tr> 
-<td><a href="conference?id=47">SHB</a></td> 
-<td>17 - 18 Jun 2011 </td> 
-<td><a href="http://www.ini.cmu.edu/events/2011/06/shb.html" target="_blank">Pittsburgh, PA, US</a></td> 
-<td><a href="http://scholar.google.com/scholar?as_publication=Interdisciplinary Workshop on Security and Human Behaviour&as_ylo=2011&as_yhi=2011" target="_blank">scholar.google.com</a></td></tr> 
-<tr> 
-<td><a href="conference?id=95">USENIX</a></td> 
-<td>15 - 17 Jun 2011 </td> 
-<td><a href="https://db.usenix.org/events/atc11/" target="_blank">Portland, Oregon, US</a></td> 
-<td><a href="http://scholar.google.com/scholar?as_publication=USENIX Annual Technical Conference&as_ylo=2011&as_yhi=2011" target="_blank">scholar.google.com</a></td><td><a href="http://usenix.org/events/byname/usenix.html" target="_blank">permalink</a></td></tr> 
-<tr> 
-<td><a href="conference?id=61">WEIS</a></td> 
-<td>14 - 15 Jun 2011 </td> 
-<td><a href="http://weis2011.econinfosec.org/" target="_blank">Arlington, VA, US</a></td> 
-<td><a href="http://scholar.google.com/scholar?as_publication=Workshop on the Economics of Information Security&as_ylo=2011&as_yhi=2011" target="_blank">scholar.google.com</a></td><td><a href="http://econinfosec.org/" target="_blank">permalink</a></td></tr> 
-<tr> 
-<td><a href="conference?id=49">WiSec</a></td> 
-<td>14 - 17 Jun 2011 </td> 
-<td><a href="http://www.sigsac.org/wisec/WiSec2011" target="_blank">Hamburg, DE</a></td> 
-<td><a href="http://scholar.google.com/scholar?as_publication=ACM Conference on Wireless Network Security&as_ylo=2011&as_yhi=2011" target="_blank">scholar.google.com</a></td><td><a href="http://www.sigsac.org/wisec/" target="_blank">permalink</a></td></tr> 
-<tr> 
-<td><a href="conference?id=53">IFIP-SEC</a></td> 
-<td>7 - 9 Jun 2011 </td> 
-<td><a href="http://sec2011.org/" target="_blank">Lucerne, CH</a></td> 
-<td><a href="http://scholar.google.com/scholar?as_publication=IFIP International Information Security Conference&as_ylo=2011&as_yhi=2011" target="_blank">scholar.google.com</a></td></tr> 
-<tr> 
-<td><a href="conference?id=65">ACNS</a></td> 
-<td>7 - 10 Jun 2011 </td> 
-<td><a href="http://www.isac.uma.es/acns2011/" target="_blank">Nerja, ES</a></td> 
-<td><a href="http://scholar.google.com/scholar?as_publication=Applied Cryptography and Network Security&as_ylo=2011&as_yhi=2011" target="_blank">scholar.google.com</a></td><td><a href="http://icsd.i2r.a-star.edu.sg/staff/jianying/acns_home/" target="_blank">permalink</a></td></tr> 
-<tr> 
-<td><a href="conference?id=79">W2SP</a></td> 
-<td>26 May 2011</td> 
-<td><a href="http://w2spconf.com/2011" target="_blank">Oakland, CA, US</a></td> 
-<td><a href="http://scholar.google.com/scholar?as_publication=Web 2.0 Security and Privacy&as_ylo=2011&as_yhi=2011" target="_blank">scholar.google.com</a></td><td><a href="http://w2spconf.com/" target="_blank">permalink</a></td></tr> 
-<tr> 
-<td><a href="conference?id=7">IEEE-SP</a></td> 
-<td>22 - 25 May 2011 </td> 
-<td><a href="http://www.ieee-security.org/TC/SP2011/index.html" target="_blank">Oakland, CA, US</a></td> 
-<td><a href="http://scholar.google.com/scholar?as_publication=IEEE Symposium on Security and Privacy&as_ylo=2011&as_yhi=2011" target="_blank">scholar.google.com</a></td><td><a href="http://www.ieee-security.org/TC/SP-Index.html" target="_blank">permalink</a></td></tr> 
-<tr> 
-<td><a href="conference?id=25">InfoHiding</a></td> 
-<td>18 - 20 May 2011 </td> 
-<td><a href="http://www.ihconference.org/2011" target="_blank">Prague, CZ</a></td> 
-<td><a href="http://scholar.google.com/scholar?as_publication=Information Hiding Workshop&as_ylo=2011&as_yhi=2011" target="_blank">scholar.google.com</a></td><td><a href="http://www.ihconference.org/" target="_blank">permalink</a></td></tr> 
-<tr> 
-<td><a href="conference?id=19">EUROCRYPT</a></td> 
-<td>15 - 19 May 2011 </td> 
-<td><a href="http://www.iacr.org/conferences/eurocrypt2011/" target="_blank">Tallinn, EE</a></td> 
-<td><a href="http://scholar.google.com/scholar?as_publication=Eurocrypt&as_ylo=2011&as_yhi=2011" target="_blank">scholar.google.com</a></td><td><a href="http://www.iacr.org/conferences/" target="_blank">permalink</a></td></tr> 
-<tr> 
-<td><a href="conference?id=135">BSDCan</a></td> 
-<td>13 - 14 May 2011 </td> 
-<td><a href="http://www.bsdcan.org/2011" target="_blank">Ottawa, ON, CA</a></td> 
-<td><a href="http://scholar.google.com/scholar?as_publication=BSDCan&as_ylo=2011&as_yhi=2011" target="_blank">scholar.google.com</a></td><td><a href="http://www.bsdcan.org/" target="_blank">permalink</a></td></tr> 
-<tr> 
-<td><a href="conference?id=75">SNS</a></td> 
-<td>10 Apr 2011</td> 
-<td><a href="http://research.microsoft.com/en-us/projects/ldg/sns2011.aspx" target="_blank">Salzburg, AT</a></td> 
-<td><a href="http://scholar.google.com/scholar?as_publication=Social Network Systems&as_ylo=2011&as_yhi=2011" target="_blank">scholar.google.com</a></td><td><a href="http://sns.socialnetconf.com/" target="_blank">permalink</a></td></tr> 
-<tr> 
-<td><a href="conference?id=77">EuroSys</a></td> 
-<td>10 - 13 Apr 2011 </td> 
-<td><a href="http://eurosys2011.cs.uni-salzburg.at/" target="_blank">Salzburg, AT</a></td> 
-<td><a href="http://scholar.google.com/scholar?as_publication=EuroSys&as_ylo=2011&as_yhi=2011" target="_blank">scholar.google.com</a></td><td><a href="http://www.eurosys.org/" target="_blank">permalink</a></td></tr> 
-<tr> 
-<td><a href="conference?id=107">EUROSEC</a></td> 
-<td>10 Apr 2011</td> 
-<td><a href="http://www.iseclab.org/eurosec-2011/" target="_blank">Salzburg, AT</a></td> 
-<td><a href="http://scholar.google.com/scholar?as_publication=European Workshop on System Security&as_ylo=2011&as_yhi=2011" target="_blank">scholar.google.com</a></td></tr> 
-<tr> 
-<td><a href="conference?id=133">SATIN</a></td> 
-<td>4 - 5 Apr 2011 </td> 
-<td>Teddington, UK</td> 
-<td><a href="http://scholar.google.com/scholar?as_publication=Securing and Trusting Internet Names&as_ylo=2011&as_yhi=2011" target="_blank">scholar.google.com</a></td><td><a href="http://conferences.npl.co.uk/satin/" target="_blank">permalink</a></td></tr> 
-<tr> 
-<td><a href="conference?id=103">NSDI</a></td> 
-<td>30 Mar - 1 Apr 2011 </td> 
-<td><a href="https://db.usenix.org/events/nsdi11/" target="_blank">Boston, MA, US</a></td> 
-<td><a href="http://scholar.google.com/scholar?as_publication=USENIX Symposium on Networked Systems Design and Implementation&as_ylo=2011&as_yhi=2011" target="_blank">scholar.google.com</a></td><td><a href="http://www.usenix.org/event/bytopic/nsdi.html" target="_blank">permalink</a></td></tr> 
-<tr> 
-<td><a href="conference?id=11">LEET</a></td> 
-<td>29 Mar 2011</td> 
-<td><a href="http://www.usenix.org/events/leet11/" target="_blank">Boston, MA, US</a></td> 
-<td><a href="http://scholar.google.com/scholar?as_publication=USENIX Workshop on Large-Scale Exploits and Emergent Threats&as_ylo=2011&as_yhi=2011" target="_blank">scholar.google.com</a></td><td><a href="http://www.usenix.org/events/" target="_blank">permalink</a></td></tr> 
-<tr> 
-<td><a href="conference?id=31">SPW</a></td> 
-<td>28 - 30 Mar 2011 </td> 
-<td>Cambridge, England, UK</td> 
-<td><a href="http://scholar.google.com/scholar?as_publication=International Workshop on Security Protocols&as_ylo=2011&as_yhi=2011" target="_blank">scholar.google.com</a></td><td><a href="http://homepages.feis.herts.ac.uk/~spw/" target="_blank">permalink</a></td></tr> 
-<tr> 
-<td><a href="conference?id=67">IEEE-WCNC</a></td> 
-<td>28 - 31 Mar 2011 </td> 
-<td><a href="http://www.ieee-wcnc.org/2011/" target="_blank">Cancun, MX</a></td> 
-<td><a href="http://scholar.google.com/scholar?as_publication=IEEE Wireless Communications & Networking Conference&as_ylo=2011&as_yhi=2011" target="_blank">scholar.google.com</a></td><td><a href="http://www.ieee-wcnc.org/" target="_blank">permalink</a></td></tr> 
-<tr> 
-<td><a href="conference?id=55">IFIP-WG11.10</a></td> 
-<td>23 - 25 Mar 2011 </td> 
-<td>Hanover,  NH, US</td> 
-<td><a href="http://scholar.google.com/scholar?as_publication=IFIP Working Group 11.10 on Critical Infrastructure Protection&as_ylo=2011&as_yhi=2011" target="_blank">scholar.google.com</a></td><td><a href="http://ifip1110.org/Conferences/" target="_blank">permalink</a></td></tr> 
-<tr> 
-<td><a href="conference?id=39">ACM-SAC</a></td> 
-<td>21 - 25 Mar 2011 </td> 
-<td><a href="http://www.acm.org/conferences/sac/sac2011/" target="_blank">Taichung, TW</a></td> 
-<td><a href="http://scholar.google.com/scholar?as_publication=ACM Symposium on Applied Computing&as_ylo=2011&as_yhi=2011" target="_blank">scholar.google.com</a></td><td><a href="http://www.acm.org/conferences/sac/" target="_blank">permalink</a></td></tr> 
-<tr> 
-<td><a href="conference?id=145">ASPLOS</a></td> 
-<td>5 - 11 Mar 2011 </td> 
-<td><a href="http://asplos11.cs.ucr.edu/" target="_blank">Newport Beach, CA, US</a></td> 
-<td><a href="http://scholar.google.com/scholar?as_publication=Architectural Support for Programming Languages and Operating Systems&as_ylo=2011&as_yhi=2011" target="_blank">scholar.google.com</a></td><td><a href="http://www.sigplan.org/asplos.htm" target="_blank">permalink</a></td></tr> 
-<tr> 
-<td><a href="conference?id=15">FC</a></td> 
-<td>28 Feb - 4 Mar 2011 </td> 
-<td><a href="http://www.ifca.ai/fc11/" target="_blank">Bay Gardens Beach Resort, LC</a></td> 
-<td><a href="http://scholar.google.com/scholar?as_publication=Financial Cryptography&as_ylo=2011&as_yhi=2011" target="_blank">scholar.google.com</a></td><td><a href="http://www.ifca.ai/" target="_blank">permalink</a></td></tr> 
-<tr> 
-<td><a href="conference?id=45">CT-RSA</a></td> 
-<td>14 - 18 Feb 2011 </td> 
-<td><a href="http://ct-rsa2011.di.uoa.gr/" target="_blank">San Francisco, CA, US</a></td> 
-<td><a href="http://scholar.google.com/scholar?as_publication=The Cryptographer's Track at RSA&as_ylo=2011&as_yhi=2011" target="_blank">scholar.google.com</a></td><td><a href="http://www.informatik.uni-trier.de/~ley/db/conf/ctrsa/index.html" target="_blank">permalink</a></td></tr> 
-<tr> 
-<td><a href="conference?id=71">FSE</a></td> 
-<td>14 - 16 Feb 2011 </td> 
-<td><a href="http://fse2011.mat.dtu.dk/" target="_blank">Lyngby, DK</a></td> 
-<td><a href="http://scholar.google.com/scholar?as_publication=Fast Software Encryption&as_ylo=2011&as_yhi=2011" target="_blank">scholar.google.com</a></td><td><a href="http://www2.mat.dtu.dk/people/Lars.R.Knudsen/fse/" target="_blank">permalink</a></td></tr> 
-<tr> 
-<td><a href="conference?id=13">NDSS</a></td> 
-<td>6 - 9 Feb 2011 </td> 
-<td><a href="http://www.isoc.org/isoc/conferences/ndss/11/" target="_blank">San Diego, CA, US</a></td> 
-<td><a href="http://scholar.google.com/scholar?as_publication=Network and Distributed System Security Symposium&as_ylo=2011&as_yhi=2011" target="_blank">scholar.google.com</a></td><td><a href="http://www.isoc.org/isoc/conferences/ndss/" target="_blank">permalink</a></td></tr> 
-<tr> 
-<td><a href="conference?id=57">IFIP-WG11.9</a></td> 
-<td>31 Jan - 2 Feb 2011 </td> 
-<td>Orlando, FL, US</td> 
-<td><a href="http://scholar.google.com/scholar?as_publication=Conference on Digital Forensics&as_ylo=2011&as_yhi=2011" target="_blank">scholar.google.com</a></td><td><a href="http://www.ifip119.org/Conferences/" target="_blank">permalink</a></td></tr> 
-<tr> 
-<td><a href="conference?id=33">CCC</a></td> 
-<td>27 - 30 Dec 2010 </td> 
-<td><a href="http://events.ccc.de/congress/2010" target="_blank">Berlin, DE</a></td> 
-<td><a href="http://scholar.google.com/scholar?as_publication=Chaos Communication Congress&as_ylo=2010&as_yhi=2010" target="_blank">scholar.google.com</a></td><td><a href="http://events.ccc.de/congress/" target="_blank">permalink</a></td></tr> 
-<tr> 
-<td><a href="conference?id=109">IEEE-WIFS</a></td> 
-<td>12 - 15 Dec 2010 </td> 
-<td><a href="http://wifs10.org/" target="_blank">Seattle, WA, US</a></td> 
-<td><a href="http://scholar.google.com/scholar?as_publication=IEEE Workshop on Information Forensics and Security&as_ylo=2010&as_yhi=2010" target="_blank">scholar.google.com</a></td></tr> 
-<tr> 
-<td><a href="conference?id=99">ACSAC</a></td> 
-<td>6 - 10 Dec 2010 </td> 
-<td><a href="http://www.acsac.org/2010/" target="_blank">Austin, TX, US</a></td> 
-<td><a href="http://scholar.google.com/scholar?as_publication=Annual Computer Security Applications Conference&as_ylo=2010&as_yhi=2010" target="_blank">scholar.google.com</a></td><td><a href="http://www.acsac.org/" target="_blank">permalink</a></td></tr> 
-<tr> 
-<td><a href="conference?id=139">LAW</a></td> 
-<td>6 - 7 Dec 2010 </td> 
-<td><a href="http://fm.csl.sri.com/LAW/2010" target="_blank">Austin, TX, US</a></td> 
-<td><a href="http://fm.csl.sri.com/LAW/2010" target="_blank">fm.csl.sri.com</a> | <a href="http://scholar.google.com/scholar?as_publication=Layered Assurance Workshop&as_ylo=2010&as_yhi=2010" target="_blank">scholar.google.com</a></td><td><a href="http://fm.csl.sri.com/LAW/" target="_blank">permalink</a></td></tr> 
-<tr> 
-<td><a href="conference?id=43">NordSec</a></td> 
-<td>27 - 30 Oct 2010 </td> 
-<td><a href="http://www.cse.tkk.fi/en/research/nordsec2010/" target="_blank">Espoo, FI</a></td> 
-<td><a href="http://www.springerlink.com/content/978-3-642-04765-7/" target="_blank">www.springerlink.com</a> | <a href="http://scholar.google.com/scholar?as_publication=Nordic Workshop on Secure IT Systems&as_ylo=2010&as_yhi=2010" target="_blank">scholar.google.com</a></td><td><a href="http://www.cse.chalmers.se/research/group/security/nordsec/contents.html" target="_blank">permalink</a></td></tr> 
-<tr> 
-<td><a href="conference?id=115">Malware</a></td> 
-<td>20 - 21 Oct 2010 </td> 
-<td><a href="http://malware10.loria.fr/" target="_blank">Nancy, FR</a></td> 
-<td><a href="http://scholar.google.com/scholar?as_publication=Malware&as_ylo=2010&as_yhi=2010" target="_blank">scholar.google.com</a></td><td><a href="http://www.malware2009.org/index.php?option=com_docman&Itemid=53" target="_blank">permalink</a></td></tr> 
-<tr> 
-<td><a href="conference?id=51">APWG-EC</a></td> 
-<td>18 - 20 Oct 2010 </td> 
-<td>Dallas, TX, US</td> 
-<td><a href="http://scholar.google.com/scholar?as_publication=APWG eCrime Researchers Summit&as_ylo=2010&as_yhi=2010" target="_blank">scholar.google.com</a></td><td><a href="http://www.antiphishing.org/ecrimeresearch/index.html" target="_blank">permalink</a></td></tr> 
-<tr> 
-<td><a href="conference?id=125">OSDI</a></td> 
-<td>4 - 6 Oct 2010 </td> 
-<td><a href="http://www.usenix.org/events/osdi10/" target="_blank">Vancouver, BC, CA</a></td> 
-<td><a href="http://scholar.google.com/scholar?as_publication=USENIX Symposium on Operating Systems Design and Implementation&as_ylo=2010&as_yhi=2010" target="_blank">scholar.google.com</a></td><td><a href="http://www.usenix.org/events/bytopic/osdi.html" target="_blank">permalink</a></td></tr> 
-<tr> 
-<td><a href="conference?id=5">ACM-CCS</a></td> 
-<td>4 - 8 Oct 2010 </td> 
-<td><a href="http://www.sigsac.org/ccs/CCS2010/" target="_blank">Chicago, IL, US</a></td> 
-<td><a href="http://portal.acm.org/citation.cfm?id=1866307&CFID=8863757&CFTOKEN=48384217" target="_blank">portal.acm.org</a> | <a href="http://scholar.google.com/scholar?as_publication=ACM Conference on Computer and Communications Security&as_ylo=2010&as_yhi=2010" target="_blank">scholar.google.com</a></td><td><a href="http://www.sigsac.org/ccs.html" target="_blank">permalink</a></td></tr> 
-<tr> 
-<td><a href="conference?id=63">WPES</a></td> 
-<td>4 Oct 2010</td> 
-<td><a href="http://wpes10.csi.muohio.edu/" target="_blank">Chicago, IL, US</a></td> 
-<td><a href="http://scholar.google.com/scholar?as_publication=Workshop on Privacy in the Electronic Society&as_ylo=2010&as_yhi=2010" target="_blank">scholar.google.com</a></td></tr> 
-<tr> 
-<td><a href="conference?id=127">NetEcon</a></td> 
-<td>3 Oct 2010</td> 
-<td><a href="http://www.usenix.org/events/netecon10/" target="_blank">Vancouver, BC, CA</a></td> 
-<td><a href="http://scholar.google.com/scholar?as_publication=Workshop on the Economics of Networks, Systems, and Computation&as_ylo=2010&as_yhi=2010" target="_blank">scholar.google.com</a></td><td><a href="http://www.usenix.org/events/byname/netecon.html" target="_blank">permalink</a></td></tr> 
-<tr> 
-<td><a href="conference?id=91">NSPW</a></td> 
-<td>21 - 23 Sep 2010 </td> 
-<td><a href="http://www.nspw.org/2010/" target="_blank">Concord, MA, US</a></td> 
-<td><a href="http://scholar.google.com/scholar?as_publication=New Security Paradigms Workshop&as_ylo=2010&as_yhi=2010" target="_blank">scholar.google.com</a></td><td><a href="http://www.nspw.org/" target="_blank">permalink</a></td></tr> 
-<tr> 
-<td><a href="conference?id=27">ESORICS</a></td> 
-<td>20 - 22 Sep 2010 </td> 
-<td><a href="http://www.esorics2010.org/" target="_blank">Athens, GR</a></td> 
-<td><a href="http://www.springer.com/computer/communication+networks/book/978-3-642-15496-6" target="_blank">www.springer.com</a> | <a href="http://scholar.google.com/scholar?as_publication=European Symposium on Research in Computer Security&as_ylo=2010&as_yhi=2010" target="_blank">scholar.google.com</a></td><td><a href="http://www.laas.fr/~esorics/" target="_blank">permalink</a></td></tr> 
-<tr> 
-<td><a href="conference?id=53">IFIP-SEC</a></td> 
-<td>20 - 23 Sep 2010 </td> 
-<td><a href="http://www.wcc2010.com/SEC2010" target="_blank">Brisbane, AU</a></td> 
-<td><a href="http://scholar.google.com/scholar?as_publication=IFIP International Information Security Conference&as_ylo=2010&as_yhi=2010" target="_blank">scholar.google.com</a></td></tr> 
-<tr> 
-<td><a href="conference?id=141">VizSec</a></td> 
-<td>14 Sep 2010</td> 
-<td><a href="http://vizsec2010.org/" target="_blank">Ottawa, ON, CA</a></td> 
-<td><a href="http://portal.acm.org/toc.cfm?id=1850795" target="_blank">portal.acm.org</a> | <a href="http://scholar.google.com/scholar?as_publication=International Symposium on Visualization for Cyber Security&as_ylo=2010&as_yhi=2010" target="_blank">scholar.google.com</a></td><td><a href="http://www.vizsec.org/" target="_blank">permalink</a></td></tr> 
-<tr> 
-<td><a href="conference?id=37">SecureComm</a></td> 
-<td>7 - 9 Sep 2010 </td> 
-<td>Singapore, SG</td> 
-<td><a href="http://scholar.google.com/scholar?as_publication=ICST Conference on Security and Privacy in Communication Networks&as_ylo=2010&as_yhi=2010" target="_blank">scholar.google.com</a></td><td><a href="http://www.securecomm.org/" target="_blank">permalink</a></td></tr> 
-<tr> 
-<td><a href="conference?id=93">BCS-HCI</a></td> 
-<td>6 - 10 Sep 2010 </td> 
-<td><a href="http://hci2010.abertay.ac.uk/" target="_blank">Dundee, Scotland, UK</a></td> 
-<td><a href="http://scholar.google.com/scholar?as_publication=Human-Computer Interaction&as_ylo=2010&as_yhi=2010" target="_blank">scholar.google.com</a></td><td><a href="http://www.bcs-hci.org.uk/" target="_blank">permalink</a></td></tr> 
-<tr> 
-<td><a href="conference?id=129">PUMP</a></td> 
-<td>6 Sep 2010</td> 
-<td><a href="http://scone.cs.st-andrews.ac.uk/pump2010/" target="_blank">Dundee, Scotland, UK</a></td> 
-<td><a href="http://scholar.google.com/scholar?as_publication=Privacy and Usability Methods Pow-wow&as_ylo=2010&as_yhi=2010" target="_blank">scholar.google.com</a></td></tr> 
-<tr> 
-<td><a href="conference?id=137">ExtremeCom</a></td> 
-<td>4 - 10 Sep 2010 </td> 
-<td><a href="http://extremecom.org/2010" target="_blank">Dharamsala, IN</a></td> 
-<td><a href="http://scholar.google.com/scholar?as_publication=Extreme Workshop on Communication&as_ylo=2010&as_yhi=2010" target="_blank">scholar.google.com</a></td><td><a href="http://extremecom.org/" target="_blank">permalink</a></td></tr> 
-<tr> 
-<td><a href="conference?id=87">SIGCOMM</a></td> 
-<td>30 Aug - 3 Sep 2010 </td> 
-<td><a href="http://conferences.sigcomm.org/sigcomm/2010/" target="_blank">New Dehli, IN</a></td> 
-<td><a href="http://scholar.google.com/scholar?as_publication=ACM SIGCOMM&as_ylo=2010&as_yhi=2010" target="_blank">scholar.google.com</a></td><td><a href="http://conferences.sigcomm.org/sigcomm/" target="_blank">permalink</a></td></tr> 
-<tr> 
-<td><a href="conference?id=29">CHES</a></td> 
-<td>18 - 20 Aug 2010 </td> 
-<td><a href="http://www.chesworkshop.org/ches2010/" target="_blank">Santa Barbara, CA, US</a></td> 
-<td><a href="http://scholar.google.com/scholar?as_publication=Cryptographic Hardware and Embedded Systems&as_ylo=2010&as_yhi=2010" target="_blank">scholar.google.com</a></td><td><a href="http://www.chesworkshop.org/" target="_blank">permalink</a></td></tr> 
-<tr> 
-<td><a href="conference?id=17">CRYPTO</a></td> 
-<td>15 - 19 Aug 2010 </td> 
-<td><a href="http://www.iacr.org/conferences/crypto2010/" target="_blank">Santa Barbara, CA, US</a></td> 
-<td><a href="http://scholar.google.com/scholar?as_publication=Advances in Cryptology&as_ylo=2010&as_yhi=2010" target="_blank">scholar.google.com</a></td><td><a href="http://www.iacr.org/conferences/" target="_blank">permalink</a></td></tr> 
-<tr> 
-<td><a href="conference?id=73">SAC</a></td> 
-<td>12 - 13 Aug 2010 </td> 
-<td><a href="http://sac2010.uwaterloo.ca/" target="_blank">Waterloo, ON, CA</a></td> 
-<td><a href="http://scholar.google.com/scholar?as_publication=Selected Areas in Cryptography&as_ylo=2010&as_yhi=2010" target="_blank">scholar.google.com</a></td><td><a href="http://www.cacr.math.uwaterloo.ca/~dstinson/SACworkshops.html" target="_blank">permalink</a></td></tr> 
-<tr> 
-<td><a href="conference?id=117">HotSec</a></td> 
-<td>10 Aug 2010</td> 
-<td><a href="https://db.usenix.org/events/hotsec10/" target="_blank">Washington, DC, US</a></td> 
-<td><a href="http://scholar.google.com/scholar?as_publication=USENIX Workshop on Hot Topics in Security&as_ylo=2010&as_yhi=2010" target="_blank">scholar.google.com</a></td></tr> 
-<tr> 
-<td><a href="conference?id=119">HealthSec</a></td> 
-<td>10 Aug 2010</td> 
-<td><a href="https://db.usenix.org/events/healthsec10/" target="_blank">Washington, DC, US</a></td> 
-<td><a href="http://scholar.google.com/scholar?as_publication=USENIX Workshop on Health Security and Privacy&as_ylo=2010&as_yhi=2010" target="_blank">scholar.google.com</a></td></tr> 
-<tr> 
-<td><a href="conference?id=121">CollSec</a></td> 
-<td>10 Aug 2010</td> 
-<td><a href="https://db.usenix.org/events/collsec10/" target="_blank">Washington, DC, US</a></td> 
-<td><a href="http://scholar.google.com/scholar?as_publication=Workshop on Collaborative Methods for Security and Privacy&as_ylo=2010&as_yhi=2010" target="_blank">scholar.google.com</a></td><td><a href="https://db.usenix.org/events/collsec10/" target="_blank">permalink</a></td></tr> 
-<tr> 
-<td><a href="conference?id=9">USENIX-SEC</a></td> 
-<td>9 - 13 Aug 2010 </td> 
-<td><a href="http://www.usenix.org/events/sec10/" target="_blank">Washington, DC, US</a></td> 
-<td><a href="http://scholar.google.com/scholar?as_publication=USENIX Security Symposium&as_ylo=2010&as_yhi=2010" target="_blank">scholar.google.com</a></td><td><a href="http://www.usenix.org/events/" target="_blank">permalink</a></td></tr> 
-<tr> 
-<td><a href="conference?id=35">WOTE</a></td> 
-<td>9 - 10 Aug 2010 </td> 
-<td><a href="https://db.usenix.org/events/evtwote10/" target="_blank">Washington, DC, US</a></td> 
-<td><a href="http://scholar.google.com/scholar?as_publication=Workshop on Trustworthy Elections&as_ylo=2010&as_yhi=2010" target="_blank">scholar.google.com</a></td></tr> 
-<tr> 
-<td><a href="conference?id=123">CSET</a></td> 
-<td>9 Aug 2010</td> 
-<td><a href="https://db.usenix.org/events/cset10/" target="_blank">Washington, DC, US</a></td> 
-<td><a href="http://scholar.google.com/scholar?as_publication=Workshop on Cyber Security Experimentation and Test &as_ylo=2010&as_yhi=2010" target="_blank">scholar.google.com</a></td></tr> 
-<tr> 
-<td><a href="conference?id=113">ASONAM</a></td> 
-<td>9 - 11 Aug 2010 </td> 
-<td><a href="http://asonam2010.hau.gr/" target="_blank">Odense, DK</a></td> 
-<td><a href="http://ieeexplore.ieee.org/xpl/tocresult.jsp?isnumber=5562740" target="_blank">ieeexplore.ieee.org</a> | <a href="http://scholar.google.com/scholar?as_publication=Advances in Social Networks Analysis and Mining&as_ylo=2010&as_yhi=2010" target="_blank">scholar.google.com</a></td></tr> 
-<tr> 
-<td><a href="conference?id=23">PETS</a></td> 
-<td>21 - 23 Jul 2010 </td> 
-<td><a href="http://petsymposium.org/2010/" target="_blank">Berlin, DE</a></td> 
-<td><a href="http://www.springeronline.com/978-3-642-14526-1" target="_blank">www.springeronline.com</a> | <a href="http://scholar.google.com/scholar?as_publication=Privacy Enhancing Technologies&as_ylo=2010&as_yhi=2010" target="_blank">scholar.google.com</a></td><td><a href="http://petsymposium.org/" target="_blank">permalink</a></td></tr> 
-<tr> 
-<td><a href="conference?id=69">HotPETs</a></td> 
-<td>21 - 23 Jul 2010 </td> 
-<td><a href="http://petsymposium.org/2010/hotpets.php" target="_blank">Berlin, DE</a></td> 
-<td><a href="http://scholar.google.com/scholar?as_publication=Hot Topics in Privacy Enhancing Technologies&as_ylo=2010&as_yhi=2010" target="_blank">scholar.google.com</a></td></tr> 
-<tr> 
-<td><a href="conference?id=81">ASA</a></td> 
-<td>21 Jul 2010</td> 
-<td><a href="http://www.lsv.ens-cachan.fr/~steel/asa4/" target="_blank">Edinburgh, Scotland, UK</a></td> 
-<td><a href="http://scholar.google.com/scholar?as_publication=Analysis of Security APIs&as_ylo=2010&as_yhi=2010" target="_blank">scholar.google.com</a></td><td><a href="http://homepages.inf.ed.ac.uk/gsteel/asa/" target="_blank">permalink</a></td></tr> 
-<tr> 
-<td><a href="conference?id=83">CSF</a></td> 
-<td>17 - 19 Jul 2010 </td> 
-<td><a href="http://www.floc-conference.org/" target="_blank">Edinburgh, Scotland, UK</a></td> 
-<td><a href="http://scholar.google.com/scholar?as_publication=IEEE Computer Security Foundations Symposium&as_ylo=2010&as_yhi=2010" target="_blank">scholar.google.com</a></td><td><a href="http://www.ieee-security.org/CSFWweb/" target="_blank">permalink</a></td></tr> 
-<tr> 
-<td><a href="conference?id=41">SOUPS</a></td> 
-<td>14 - 16 Jul 2010 </td> 
-<td><a href="http://cups.cs.cmu.edu/soups/2010/" target="_blank">Redmond, WA, US</a></td> 
-<td><a href="http://scholar.google.com/scholar?as_publication=Symposium On Usable Privacy and Security&as_ylo=2010&as_yhi=2010" target="_blank">scholar.google.com</a></td><td><a href="http://cups.cs.cmu.edu/soups/" target="_blank">permalink</a></td></tr> 
-<tr> 
-<td><a href="conference?id=101">CEAS</a></td> 
-<td>13 - 14 Jul 2010 </td> 
-<td><a href="http://www.ceas.cc/2010/" target="_blank">Redmond, WA, US</a></td> 
-<td><a href="http://scholar.google.com/scholar?as_publication=Collaboration, Electronic messaging, Anti-Abuse and Spam Conference&as_ylo=2010&as_yhi=2010" target="_blank">scholar.google.com</a></td><td><a href="http://www.ceas.cc/" target="_blank">permalink</a></td></tr> 
-	</tbody> 
-</table> 
-</div> 
+
+<table class="conferences">
+	<thead>
+		<tr>
+			<th>Event</th>
+			<th>Date(s)</th>
+			<th>Location</th>
+			<th>Proceedings</th>
+		</tr>
+	</thead>
+	<tbody>
+		{% for event in recent %}
+			{{ event_row(event, show_deadlines = False, show_proceedings = True) }}
+		{% endfor %}
+	</tbody>
+</table>
  
 {% endblock %}
+
