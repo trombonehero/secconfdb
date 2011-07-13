@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% import 'conf.html' as conf %}
+{% import 'event.html' as event %}
 
 {% block title %}
 {{ conference.abbreviation }}: {{ conference.name }}
@@ -29,7 +29,7 @@ Affiliated with
 <p>{{ conference.description if conference.description }}</p>
 
 </div>
-{{ conf.event_table(events, show_proceedings = True) }}
+{{ event.event_table(events, show_proceedings = True) }}
  
 {% endblock %}
 

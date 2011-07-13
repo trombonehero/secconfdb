@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% import 'conf.html' as conf %}
+{% import 'event.html' as event %}
 
 {% block footer %}
 	<span class="filters"> 
@@ -23,17 +23,17 @@
  
 <a name="deadlines"></a> 
 <h2>Upcoming Deadlines</h2> 
-{{ conf.event_table(deadlines, show_deadlines = True, soonness = soonness) }}
+{{ event.event_table(deadlines, show_deadlines = True, soonness = soonness) }}
  
  
 <a name="upcoming"></a> 
 <h2>Upcoming Conferences</h2>
-{{ conf.event_table(upcoming) }}
+{{ event.event_table(upcoming) }}
  
  
 <a name="recent"></a> 
 <h2>Recent Conferences</h2> 
-{{ conf.event_table(recent, show_proceedings = True) }}
+{{ event.event_table(recent, show_proceedings = True) }}
  
 {% endblock %}
 
