@@ -36,8 +36,6 @@ class ConferenceInstance:
 
 
 	def format_deadline(self, which = None):
-		print "looking for the '%s' deadine" % which
-
 		date = None
 		if which is None: date = self.deadline
 		else: date = self.__dict__[which + "Deadline"]
