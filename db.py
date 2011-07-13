@@ -46,6 +46,7 @@ class Clause:
 		self.value = value
 
 	def __str__(self):
+		if self.value is None: return ""
 		return " ".join([self.operator, self.value])
 
 	def __add__(self, s):
