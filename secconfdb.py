@@ -6,8 +6,6 @@ import jinja2
 
 app = flask.Flask(__name__)
 
-jinja = jinja2.Environment(loader = jinja2.PackageLoader('secconfdb', 'layout'))
-
 row = jinja2.Template('''
 <tr>
 	<td>{{ conf.abbreviation }}</td>
@@ -42,13 +40,11 @@ def tags(request):
 
 @app.route('/')
 def hello():
-	template = jinja.get_template('main.html')
-
 	tag_names = tags(flask.request)
 	current_tags = [ id for (id, name) in db.get_tags(tag_names) ]
 	if len(tag_names) == 0: tag_names = None
 
-	return template.render(
+	return flask.render_template('main.html',
 			tags = tag_names,
 			year = 2011,
 			deadlines = db.deadlines(current_tags),
@@ -58,8 +54,7 @@ def hello():
 
 @app.route('/preferences')
 def prefs():
-	template = jinja.get_template('prefs.html')
-	return template.render(
+	return flask.render_template('prefs.html',
 			all_tags = db.get_tags(),
 			current_tags = tags(flask.request)
 		)
@@ -80,9 +75,8 @@ def setprefs():
 
 
 def make_calendar(events, title):
-	template = jinja.get_template('vcal')
 	return flask.Response(
-		response = template.render(
+		response = flask.render_template('vcal',
 			events = events, title = title, datetime = datetime),
 		mimetype = 'text/plain')
 
@@ -137,7 +131,7 @@ def conference_by_id(conf_id):
 	(conference, events) = db.conference_events(id = conf_id)
 	if len(events) == 0: flask.abort(404)
 
-	return jinja.get_template('conference.html').render(
+	return flask.render_template('conference.html',
 		conference = conference,
 		events = events)
 
@@ -146,7 +140,7 @@ def conference_by_name(abbreviation):
 	(conference, events) = db.conference_events(abbreviation = abbreviation)
 	if len(events) == 0: flask.abort(404)
 
-	return jinja.get_template('conference.html').render(
+	return flask.render_template('conference.html',
 		conference = conference,
 		events = events)
 
