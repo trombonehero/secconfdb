@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+
+{% import 'conf.html' as conf %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block content %}
+<a name="deadlines"></a> 
+<h2>Upcoming Deadlines</h2> 
+{{ conf.event_table(events, show_proceedings = True) }}
+ 
+{% endblock %}
+

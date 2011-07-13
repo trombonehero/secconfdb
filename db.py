@@ -231,3 +231,13 @@ def recent(tags = []):
 			order = Order.start_date(reverse = True))
 	return query.execute(cursor())
 
+def conference(id = None, abbreviation = None):
+	assert (id is not None) ^ (abbreviation is not None)
+
+	filter = None
+	if id is not None: filter = Filter("conference = %d" % id)
+	else: filter = Filter("abbreviation = '%s'" % abbreviation)
+
+	query = Query(filter = filter, order = Order.start_date())
+	return query.execute(cursor())
+

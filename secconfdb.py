@@ -133,12 +133,22 @@ def deadline_calendar():
 
 # Conference info, either by ID or by abbreviation.
 @app.route('/conference/<int:conf_id>')
-def confernece(conf_id):
-	return "Let's look up conference %d" % conf_id
+def conference_by_id(conf_id):
+	events = db.conference(id = conf_id)
+	if len(events) == 0: flask.abort(404)
+
+	return jinja.get_template('conference.html').render(
+		title = '%s: %s' % (events[0].abbreviation, events[0].name),
+		events = events)
 
 @app.route('/conference/<string:abbreviation>')
-def conference(abbreviation):
-	return "Let's look up conference '%s'" % abbreviation
+def conference_by_name(abbreviation):
+	events = db.conference(abbreviation = abbreviation)
+	if len(events) == 0: flask.abort(404)
+
+	return jinja.get_template('conference.html').render(
+		title = '%s: %s' % (abbreviation, events[0].name),
+		events = events)
 
 if __name__ == '__main__':
 	app.run(debug = True)
