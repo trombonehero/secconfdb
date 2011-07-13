@@ -1,0 +1,6 @@
+The code that runs securityconferences.net.
+
+This is based on PHP that ran the security conference database for the
+Security Group at the University of Cambridge Computer Laboratory, but
+it's now all slick, python-ey and web-app-ey.
+
