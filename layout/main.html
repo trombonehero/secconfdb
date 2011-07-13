@@ -1,4 +1,7 @@
 {% extends "base.html" %}
+
+{% import 'conf.html' as conf %}
+
 {% block title %}SECCONFDB{% endblock %}
 {% block footer %}
 	<span class="filters"> 
@@ -7,49 +10,6 @@
 	</span> 
 	{{ super() }}
 {% endblock %}
-
-
-<!--
-Render an event as a table row, possibly including deadlines and proceedings.
--->
-{% macro event_row(event, show_deadlines = True, show_proceedings = False) %}
-<tr>
-	{% if show_deadlines %}
-	<td class="{{ soonness(event.deadline) }}">
-		{{ event.format_deadline() }}
-	</td>
-	<td class="{{ soonness(event.posterDeadline) }}">
-		{{ event.format_deadline("poster") }}
-	</td>
-	{% endif %}
-	<td>
-		<a href="conference/{{ event.abbreviation }}">
-			{{ event.abbreviation }}
-		</a>
-	</td>
-	<td>{{ event.when() }}</td>
-	<td>
-		{% if event.url %}
-			<a href="{{ event.url }}" target="_blank">
-		{% endif %}
-		{{ event.where() }}
-		{% if event.url %}</a>{% endif %}
-	</td>
-	{% if show_proceedings %}
-		<td>
-			{% if event.proceedings %}
-				<a href="{{ event.proceedings }}">
-					{{ event.proceedings_site() }}
-				</a>
-				|
-			{% endif %}
-			<a href="http://scholar.google.com/scholar?as_publication={{ event.name }}&as_ylo={{ event.startDate.year }}&as_yhi={{ event.endDate.year }}" target="_blank">
-				scholar.google.com
-			</a>
-		</td>
-	{% endif %}
-</tr>
-{% endmacro %}
 
 
 {% block content %}
@@ -64,66 +24,17 @@ Render an event as a table row, possibly including deadlines and proceedings.
  
 <a name="deadlines"></a> 
 <h2>Upcoming Deadlines</h2> 
- 
-<table class="conferences"> 
-	<thead> 
-		<tr> 
-			<th colspan="2">Deadlines</th> 
-			<th rowspan="2">Event</th> 
-			<th rowspan="2">Date(s)</th> 
-			<th rowspan="2">Location</th> 
-		</tr> 
-		<tr>			
-			<th>Papers</th> 
-			<th>Posters</th> 
-		</tr> 
-	</thead> 
-	<tbody>
-		{% for conference in deadlines %}
-			{{ event_row(conference) }}
-		{% endfor %}
-	</tbody>
-</table>
-
+{{ conf.event_table(deadlines, show_deadlines = True, soonness = soonness) }}
  
  
 <a name="upcoming"></a> 
 <h2>Upcoming Conferences</h2>
-
-<table class="conferences">
-	<thead>
-		<tr>
-			<th>Event</th>
-			<th>Date(s)</th>
-			<th>Location</th>
-		</tr>
-	</thead>
-	<tbody>
-		{% for conference in upcoming %}
-			{{ event_row(conference, show_deadlines = False) }}
-		{% endfor %}
-	</tbody>
-</table>
+{{ conf.event_table(upcoming) }}
  
  
 <a name="recent"></a> 
 <h2>Recent Conferences</h2> 
-
-<table class="conferences">
-	<thead>
-		<tr>
-			<th>Event</th>
-			<th>Date(s)</th>
-			<th>Location</th>
-			<th>Proceedings</th>
-		</tr>
-	</thead>
-	<tbody>
-		{% for event in recent %}
-			{{ event_row(event, show_deadlines = False, show_proceedings = True) }}
-		{% endfor %}
-	</tbody>
-</table>
+{{ conf.event_table(recent, show_proceedings = True) }}
  
 {% endblock %}
 
