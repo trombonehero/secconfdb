@@ -238,6 +238,6 @@ def conference(id = None, abbreviation = None):
 	if id is not None: filter = Filter("conference = %d" % id)
 	else: filter = Filter("abbreviation = '%s'" % abbreviation)
 
-	query = Query(filter = filter, order = Order.start_date())
+	query = Query(filter = filter, order = Order.start_date(reverse = True))
 	return query.execute(cursor())
 
