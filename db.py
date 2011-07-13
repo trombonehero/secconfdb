@@ -6,7 +6,7 @@ import MySQLdb
 from query import Query, Fields, Source, Filter, Order
 
 
-def reconnect(db = 'secconfdb', user = 'secconfdb', passwd = None):
+def connect(db = 'secconfdb', user = 'secconfdb', passwd = None):
 	connection = MySQLdb.connect(
 		host = 'localhost', db = 'secconfdb', user = 'secconfdb')
 
@@ -23,13 +23,13 @@ db_connection = None
 
 def cursor():
 	global db_connection
-	if db_connection is None: db_connection = reconnect()
+	if db_connection is None: db_connection = connect()
 
 	try: return db_connection.cursor()
 	except MySQLdb.OperationalError, (errno, message):
 		# Catch dead connection, re-connect
 		if errno == 2006:
-			db_connection = reconnect()
+			db_connection = connect()
 			return db_connection.cursor()
 		else: raise
 
