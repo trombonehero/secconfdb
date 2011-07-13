@@ -101,35 +101,43 @@ class Filter(Clause):
 	def __init__(self, value):
 		Clause.__init__(self, "WHERE", value)
 
+	def __and__(self, other):
+		if self.value is None: return other
+		if other.value is None: return self
+
+		return Filter('(%s) AND (%s)' % (self.value, other.value))
+
 	@classmethod
 	def recent(cls):
 		return Filter("""
-DATEDIFF(startDate, CURDATE()) < 0
-AND DATEDIFF(startDate, CURDATE()) >= -180
-""")
+	DATEDIFF(startDate, CURDATE()) < 0
+	AND DATEDIFF(startDate, CURDATE()) >= -180
+	""")
 
 	@classmethod
 	def upcoming(cls):
 		return Filter("""
-DATEDIFF(startDate, CURDATE()) >= 0
-AND DATEDIFF(startDate, CURDATE()) <= 180
-""")
+	DATEDIFF(startDate, CURDATE()) >= 0
+	AND DATEDIFF(startDate, CURDATE()) <= 180
+	""")
 
 	@classmethod
-	def upcomingDeadlines(cls, tags):
-		sql = """
-		(
-			(DATEDIFF(deadline, CURDATE()) >= -14)
-			OR (DATEDIFF(extendedDeadline, CURDATE()) >= -14)
-			OR (DATEDIFF(posterDeadline, CURDATE()) >= -14)
-		)
-		"""
+	def upcomingDeadlines(cls):
+		return Filter("""
+	(DATEDIFF(deadline, CURDATE()) >= -14)
+	OR (DATEDIFF(extendedDeadline, CURDATE()) >= -14)
+	OR (DATEDIFF(posterDeadline, CURDATE()) >= -14)
+	""")
 
-		if len(tags) > 0:
-			patterns = [ "'%d,%%'", "'%%,%d,%%'", "'%%,%d'" ]
-			match = ' OR '.join([ "tags LIKE %s" % p for p in patterns ])
-			sql += ' AND (%s)' % ' OR '.join(
-				[ match % (int(i), int(i), int(i)) for i in tags ])
+
+	@classmethod
+	def tags(cls, tags):
+		if len(tags) == 0: return Filter(None)
+
+		patterns = [ "'%d,%%'", "'%%,%d,%%'", "'%%,%d'" ]
+		match = ' OR '.join([ "tags LIKE %s" % p for p in patterns ])
+		sql = ' OR '.join(
+			[ match % (int(i), int(i), int(i)) for i in tags ])
 
 		return Filter("(%s)" % sql)
 
@@ -206,15 +214,20 @@ def get_tags(names = None):
 
 
 def deadlines(tags):
-	query = Query(Filter.upcomingDeadlines(tags), Order.deadline())
+	query = Query(
+			filter = Filter.upcomingDeadlines() & Filter.tags(tags),
+			order = Order.deadline())
 	return query.execute(cursor())
 
 def upcoming(tags):
-	query = Query(Filter.upcoming(), Order.start_date())
+	query = Query(
+			filter = Filter.upcoming() & Filter.tags(tags),
+			order = Order.start_date())
 	return query.execute(cursor())
 
 def recent(tags):
-	query = Query(Filter.recent(), Order.start_date(reverse = True))
+	query = Query(
+			filter = Filter.recent() & Filter.tags(tags),
+			order = Order.start_date(reverse = True))
 	return query.execute(cursor())
-
 
