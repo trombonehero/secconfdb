@@ -2,11 +2,33 @@
 
 {% import 'conf.html' as conf %}
 
-{% block title %}{{ title }}{% endblock %}
+{% block title %}
+{{ conference.abbreviation }}: {{ conference.name }}
+{% endblock %}
 
 {% block content %}
-<a name="deadlines"></a> 
-<h2>Upcoming Deadlines</h2> 
+<div class="block">
+<h2>
+{{ conference.abbreviation }}
+{% if conference.url %}
+(<a href="{{ conference.url }}">{{ conference.url }}</a>)
+{% endif %}
+</h2>
+
+{% if conference.tags %}
+<p class="tags">{{ ' | '.join(conference.tags) }}</p>
+{% endif %}
+
+{% if conference.parent %}
+<p>
+Affiliated with
+<a href="{{ conference.parent.abbreviation }}">{{ conference.parent.name }}</a>.
+</p>
+{% endif %}
+
+<p>{{ conference.description if conference.description }}</p>
+
+</div>
 {{ conf.event_table(events, show_proceedings = True) }}
  
 {% endblock %}

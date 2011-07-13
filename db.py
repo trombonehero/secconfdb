@@ -70,7 +70,15 @@ class Fields(Clause):
 		return [ re.sub(".* AS ", "", name) for name in self.fields ]
 
 	@classmethod
-	def default(cls):
+	def conference(cls):
+		return Fields(
+			[
+				'conference', 'parent', 'name', 'abbreviation', 'description',
+				'permanentURL AS url', 'tags'
+			])
+
+	@classmethod
+	def events(cls):
 		return Fields(
 			[
 				"url", "conference", "abbreviation", "Conferences.name AS name",
@@ -89,7 +97,11 @@ class Source(Clause):
 		Clause.__init__(self, "FROM", value)
 
 	@classmethod
-	def default(cls):
+	def conference(cls):
+		return Source("Conferences")
+
+	@classmethod
+	def events(cls):
 		return Source("""ConferenceInstances
         INNER JOIN Conferences USING (conference)
         INNER JOIN Locations USING (location)
@@ -171,9 +183,9 @@ CASE
 class Query:
 	def __init__(self,
 			filter,
-			order,
-			fields = Fields.default(),
-			source = Source.default()):
+			order = Order.start_date(),
+			fields = Fields.events(),
+			source = Source.events()):
 
 		self.where = filter
 		self.order = order
@@ -197,10 +209,13 @@ class Query:
 		return self.fields + self.source + self.where + self.order
 
 
-def get_tags(names = None):
+def get_tags(names = None, ids = None):
 	where = Filter(None)
 	if names is not None:
 		where = Filter("name in ('%s')" % "','".join(names))
+
+	if ids is not None:
+		where = Filter("tag in (%s)" % ','.join(ids))
 
 	query = Query(
 			fields = Fields([ 'tag', 'name' ]),
@@ -238,6 +253,33 @@ def conference(id = None, abbreviation = None):
 	if id is not None: filter = Filter("conference = %d" % id)
 	else: filter = Filter("abbreviation = '%s'" % abbreviation)
 
-	query = Query(filter = filter, order = Order.start_date(reverse = True))
-	return query.execute(cursor())
+	c = cursor()
+
+	conferences = Query(
+			fields = Fields.conference(),
+			source = Source.conference(),
+			filter = filter,
+			order = Order(None),
+		).execute(c)
+
+	if len(conferences) == 0: return None
+	else: return conferences[0].__dict__
+
+
+def conference_events(id = None, abbreviation = None):
+	conf = conference(id, abbreviation)
+	if conf['parent']:
+		conf['parent'] = conference(id = int(conf['parent']))
+
+	if len(conf['tags']) > 0:
+		conf['tags'] = [
+			name for (id, name) in get_tags(ids = conf['tags'].split(',')) ]
+
+	events = Query(
+			filter = Filter('conference = %d' % conf['conference']),
+			order = Order.start_date(reverse = True),
+		).execute(cursor())
+
+	return (conf, events)
+
 
