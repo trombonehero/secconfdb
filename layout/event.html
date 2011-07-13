@@ -5,9 +5,22 @@ Render an event as a table row, possibly including deadlines and proceedings.
 macro event_row(event, show_deadlines, show_proceedings, soonness = None)
 %}
 <tr>
+	{% set deadline = (
+		event.extendedDeadline if event.extendedDeadline else event.deadline) %}
+
 	{% if show_deadlines %}
-	<td class="{{ soonness(event.deadline) }}">
+	<td class="{{ soonness(deadline) }}">
+		{% if event.extendedDeadline %}
+		{{ event.format_deadline("extended") }}
+		<br/>
+		<strike>
+		{% endif %}
+
 		{{ event.format_deadline() }}
+
+		{% if event.extendedDeadline %}
+		</strike>
+		{% endif %}
 	</td>
 	<td class="{{ soonness(event.posterDeadline) }}">
 		{{ event.format_deadline("poster") }}
