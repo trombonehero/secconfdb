@@ -97,6 +97,14 @@ body
 	text-align: center;
 }
 
+#skyscraper-right
+{
+	position: fixed;
+	right: 1em;
+	bottom: 2em;
+	z-index: -99;
+}
+
 a
 {
 	color: #1c3553;
