@@ -2,17 +2,8 @@ import datetime
 import db
 
 import flask
-import jinja2
 
 app = flask.Flask(__name__)
-
-row = jinja2.Template('''
-<tr>
-	<td>{{ conf.abbreviation }}</td>
-	<td>{{ conf.when() }}</td>
-	<td>{{ conf.where() }}</td>
-</tr>
-''')
 
 
 def soonness(date):
