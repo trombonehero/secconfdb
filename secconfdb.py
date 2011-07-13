@@ -60,7 +60,9 @@ def setprefs():
 			current_tags.append(key[4:])
 
 	response = app.make_response(flask.redirect('/'))
-	response.set_cookie('tags', value = ','.join(sorted(current_tags)))
+	response.set_cookie('tags',
+			max_age = 10 * 365 * 24 * 3600,
+			value = ','.join(sorted(current_tags)))
 
 	return response
 
