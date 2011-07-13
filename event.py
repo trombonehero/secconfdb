@@ -1,6 +1,6 @@
 import re
 
-class ConferenceInstance:
+class Event:
 	def __init__(self, data):
 		assert data is not None
 		assert len(data) > 0

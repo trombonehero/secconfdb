@@ -3,7 +3,7 @@ import re
 
 import MySQLdb
 
-import conf
+import event
 
 
 def reconnect(db = 'secconfdb', user = 'secconfdb', passwd = None):
@@ -201,7 +201,7 @@ class Query:
 		field_names = self.fields.names()
 		for result in results:
 			conferences.append(
-				conf.ConferenceInstance(dict(zip(field_names, result))))
+				event.Event(dict(zip(field_names, result))))
 
 		return conferences
 
