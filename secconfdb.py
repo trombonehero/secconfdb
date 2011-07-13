@@ -7,11 +7,15 @@ app = flask.Flask(__name__)
 
 
 @app.route('/')
-def hello():
+def main():
+	""" Main "entry point" for the site. """
+
+	# What tags are we using to filter results?
 	tag_names = utils.tags()
 	current_tags = [ id for (id, name) in db.get_tags(tag_names) ]
 	if len(tag_names) == 0: tag_names = None
 
+	# Render from the 'main' template.
 	return flask.render_template('main.html',
 			tags = tag_names,
 			year = 2011,
@@ -20,8 +24,22 @@ def hello():
 			recent = db.recent(current_tags),
 			utils = utils)
 
+
+@app.route('/conference/<string:abbreviation>')
+def conference(abbreviation):
+	""" Render information about a particular conference (e.g. all events). """
+	(conference, events) = db.conference_events(abbreviation = abbreviation)
+	if len(events) == 0: flask.abort(404)
+
+	return flask.render_template('conference.html',
+		conference = conference,
+		events = events)
+
+
+# User preferences.
 @app.route('/preferences')
 def prefs():
+	""" Ask the user for preferences. """
 	return flask.render_template('prefs.html',
 			all_tags = db.get_tags(),
 			current_tags = utils.tags()
@@ -29,9 +47,8 @@ def prefs():
 
 @app.route('/setprefs', methods = [ 'POST' ])
 def setprefs():
-
+	""" Save user preferences in a cookie. """
 	current_tags = []
-
 	for key in flask.request.form:
 		if key.startswith('tag:'):
 			current_tags.append(key[4:])
@@ -44,8 +61,10 @@ def setprefs():
 	return response
 
 
+# vCal files for upcoming conferences and deadlines.
 @app.route('/conferences.ics')
 def conference_calendar():
+	""" A vCal file of upcoming conferences. """
 	events = [
 		(
 			event.abbreviation, event.name, event.where(),
@@ -58,8 +77,10 @@ def conference_calendar():
 
 @app.route('/deadlines.ics')
 def deadline_calendar():
+	""" A vCal file of impending deadlines. """
 	events = []
 	for conf in db.deadlines():
+		# Use extended paper deadline if it exists, or the original otherwise.
 		if conf.extendedDeadline:
 			events.append(
 				(
@@ -77,6 +98,7 @@ def deadline_calendar():
 					conf.deadline,
 				))
 
+		# A conference may also have a poster deadline.
 		if conf.posterDeadline:
 			events.append(
 				(
@@ -88,15 +110,6 @@ def deadline_calendar():
 
 	return utils.make_vcal(events, 'Conference Deadlines')
 
-
-@app.route('/conference/<string:abbreviation>')
-def conference_by_name(abbreviation):
-	(conference, events) = db.conference_events(abbreviation = abbreviation)
-	if len(events) == 0: flask.abort(404)
-
-	return flask.render_template('conference.html',
-		conference = conference,
-		events = events)
 
 if __name__ == '__main__':
 	app.run(debug = True)
