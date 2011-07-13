@@ -213,19 +213,19 @@ def get_tags(names = None):
 	return [ (i.tag, i.name) for i in results ]
 
 
-def deadlines(tags):
+def deadlines(tags = []):
 	query = Query(
 			filter = Filter.upcomingDeadlines() & Filter.tags(tags),
 			order = Order.deadline())
 	return query.execute(cursor())
 
-def upcoming(tags):
+def upcoming(tags = []):
 	query = Query(
 			filter = Filter.upcoming() & Filter.tags(tags),
 			order = Order.start_date())
 	return query.execute(cursor())
 
-def recent(tags):
+def recent(tags = []):
 	query = Query(
 			filter = Filter.recent() & Filter.tags(tags),
 			order = Order.start_date(reverse = True))
