@@ -2,14 +2,14 @@
 Render an event as a table row, possibly including deadlines and proceedings.
 -->
 {%
-macro event_row(event, show_deadlines, show_proceedings, soonness = None)
+macro event_row(event, show_deadlines, show_proceedings, utils = None)
 %}
 <tr>
 	{% set deadline = (
 		event.extendedDeadline if event.extendedDeadline else event.deadline) %}
 
 	{% if show_deadlines %}
-	<td class="{{ soonness(deadline) }}">
+	<td class="{{ utils.soonness(deadline) }}">
 		{% if event.extendedDeadline %}
 		{{ event.format_deadline("extended") }}
 		<br/>
@@ -22,7 +22,7 @@ macro event_row(event, show_deadlines, show_proceedings, soonness = None)
 		</strike>
 		{% endif %}
 	</td>
-	<td class="{{ soonness(event.posterDeadline) }}">
+	<td class="{{ utils.soonness(event.posterDeadline) }}">
 		{{ event.format_deadline("poster") }}
 	</td>
 	{% endif %}
@@ -58,7 +58,7 @@ macro event_row(event, show_deadlines, show_proceedings, soonness = None)
 
 {%
 macro event_table(
-	events, show_deadlines = False, show_proceedings = False, soonness = None)
+	events, show_deadlines = False, show_proceedings = False, utils = None)
 %}
 {% set header_extra = ' rowspan="2"' if show_deadlines else '' %}
 <table class="conferences"> 
@@ -85,7 +85,7 @@ macro event_table(
 		{% for event in events %}
 			{{
 				event_row(
-					event, show_deadlines, show_proceedings, soonness = soonness)
+					event, show_deadlines, show_proceedings, utils = utils)
 			}}
 		{% endfor %}
 	</tbody>
