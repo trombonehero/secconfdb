@@ -5,14 +5,34 @@ import MySQLdb
 
 import conf
 
-connection = MySQLdb.connect(
-	host = 'localhost', db = 'secconfdb', user = 'secconfdb')
 
-connection.cursor().execute("""
-	SET NAMES utf8;
-	SET CHARACTER SET utf8;
-	SET character_set_connection=utf8;
-""")
+def reconnect(db = 'secconfdb', user = 'secconfdb', passwd = None):
+	connection = MySQLdb.connect(
+		host = 'localhost', db = 'secconfdb', user = 'secconfdb')
+
+	connection.cursor().execute("""
+			SET NAMES utf8;
+			SET CHARACTER SET utf8;
+			SET character_set_connection=utf8;
+		""")
+
+	return connection
+
+
+db_connection = None
+
+def cursor():
+	global db_connection
+	if db_connection is None: db_connection = reconnect()
+
+	try: return db_connection.cursor()
+	except MySQLdb.OperationalError, (errno, message):
+		# Catch dead connection, re-connect
+		if errno == 2006:
+			db_connection = reconnect()
+			return db_connection.cursor()
+		else: raise
+
 
 
 class Clause:
@@ -95,13 +115,22 @@ AND DATEDIFF(startDate, CURDATE()) <= 180
 """)
 
 	@classmethod
-	def upcomingDeadlines(cls):
-		return Filter("""
-(
-	(DATEDIFF(deadline, CURDATE()) >= -14)
-	OR (DATEDIFF(extendedDeadline, CURDATE()) >= -14)
-	OR (DATEDIFF(posterDeadline, CURDATE()) >= -14)
-)""")
+	def upcomingDeadlines(cls, tags):
+		sql = """
+		(
+			(DATEDIFF(deadline, CURDATE()) >= -14)
+			OR (DATEDIFF(extendedDeadline, CURDATE()) >= -14)
+			OR (DATEDIFF(posterDeadline, CURDATE()) >= -14)
+		)
+		"""
+
+		if len(tags) > 0:
+			patterns = [ "'%d,%%'", "'%%,%d,%%'", "'%%,%d'" ]
+			match = ' OR '.join([ "tags LIKE %s" % p for p in patterns ])
+			sql += ' AND (%s)' % ' OR '.join(
+				[ match % (int(i), int(i), int(i)) for i in tags ])
+
+		return Filter("(%s)" % sql)
 
 
 class Order(Clause):
@@ -131,12 +160,16 @@ CASE
 
 
 class Query:
-	fields = Fields.default()
-	source = Source.default()
+	def __init__(self,
+			filter,
+			order,
+			fields = Fields.default(),
+			source = Source.default()):
 
-	def __init__(self, filter, order):
 		self.where = filter
 		self.order = order
+		self.fields = fields
+		self.source = source
 
 	def execute(self, cursor):
 		cursor.execute(self.__str__())
@@ -155,16 +188,32 @@ class Query:
 		return self.fields + self.source + self.where + self.order
 
 
+def get_tags(names = None):
+	where = Filter(None)
+	if names is not None:
+		where = Filter("name in ('%s')" % "','".join(names))
 
-def deadlines():
-	query = Query(Filter.upcomingDeadlines(), Order.deadline())
-	return query.execute(connection.cursor())
+	query = Query(
+			fields = Fields([ 'tag', 'name' ]),
+			source = Source('Tags'),
+			filter = where,
+			order = Order('name'))
 
-def upcoming():
+	results = query.execute(cursor())
+
+	return [ (i.tag, i.name) for i in results ]
+
+
+def deadlines(tags):
+	query = Query(Filter.upcomingDeadlines(tags), Order.deadline())
+	return query.execute(cursor())
+
+def upcoming(tags):
 	query = Query(Filter.upcoming(), Order.start_date())
-	return query.execute(connection.cursor())
+	return query.execute(cursor())
 
-def recent():
+def recent(tags):
 	query = Query(Filter.recent(), Order.start_date(reverse = True))
-	return query.execute(connection.cursor())
+	return query.execute(cursor())
+
 

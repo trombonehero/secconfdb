@@ -101,15 +101,22 @@ a
 
 input
 {
-	border: 0;
+	border: 1px solid #1c3553;
 	text-align: center;
 }
 
-table.conferences
+table.conferences, table.tags
 {
 	background: white;
+	border: solid 2px #1c3553;
 	margin-left: auto;
 	margin-right: auto;
+}
+
+table.tags td.submit
+{
+	padding: 0.5em;
+	text-align: right;
 }
 
 table.conferences th, .sidebar th

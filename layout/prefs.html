@@ -1,0 +1,74 @@
+{% extends "base.html" %}
+{% block title %}Preferences{% endblock %}
+
+{% macro event_row(event, show_deadlines = True, show_proceedings = False) %}
+<tr>
+	{% if show_deadlines %}
+	<td class="{{ soonness(event.deadline) }}">
+		{{ event.format_deadline() }}
+	</td>
+	<td class="{{ soonness(event.posterDeadline) }}">
+		{{ event.format_deadline("poster") }}
+	</td>
+	{% endif %}
+	<td>
+		<a href="conference/{{ event.abbreviation }}">
+			{{ event.abbreviation }}
+		</a>
+	</td>
+	<td>{{ event.when() }}</td>
+	<td>
+		{% if event.url %}
+			<a href="{{ event.url }}" target="_blank">
+		{% endif %}
+		{{ event.where() }}
+		{% if event.url %}</a>{% endif %}
+	</td>
+	{% if show_proceedings %}
+		<td>
+			{% if event.proceedings %}
+				<a href="{{ event.proceedings }}">
+					{{ event.proceedings_site() }}
+				</a>
+				|
+			{% endif %}
+			<a href="http://scholar.google.com/scholar?as_publication={{ event.name }}&as_ylo={{ event.startDate.year }}&as_yhi={{ event.endDate.year }}" target="_blank">
+				scholar.google.com
+			</a>
+		</td>
+	{% endif %}
+</tr>
+{% endmacro %}
+
+
+{% block content %}
+<a name="filters"></a> 
+<h2>Filters</h2> 
+ 
+<form action="setprefs" method="post">
+	<table class="tags"> 
+		<tbody>
+			<tr>
+				{% for (id, name) in all_tags %}
+					<td>
+						<input name="tag:{{ name }}" type="checkbox" class="tagbox"{{
+							' checked' if name in current_tags else ''
+						}}/>
+					</td>
+					<td>{{ name }}</td>
+					{% if loop.index % 6 == 0 %}
+						</tr><tr>
+					{% endif %}
+				{% endfor %}
+			</tr>
+			<tr>
+				<td colspan="12" class="submit">
+					<input type="submit" value="Save Preferences"/>
+				</td>
+			</tr>
+		</tbody>
+	</table>
+</form>
+
+{% endblock %}
+

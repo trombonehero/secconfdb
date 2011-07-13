@@ -2,7 +2,8 @@
 {% block title %}SECCONFDB{% endblock %}
 {% block footer %}
 	<span class="filters"> 
-		none (<a href="preferences.php#filters">change my filters</a>)
+		{{ ' | '.join(tags) if tags else 'none' }}
+		(<a href="preferences#filters">change my filters</a>)
 	</span> 
 	{{ super() }}
 {% endblock %}
