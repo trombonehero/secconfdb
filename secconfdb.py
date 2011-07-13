@@ -89,16 +89,6 @@ def deadline_calendar():
 	return utils.make_vcal(events, 'Conference Deadlines')
 
 
-# Conference info, either by ID or by abbreviation.
-@app.route('/conference/<int:conf_id>')
-def conference_by_id(conf_id):
-	(conference, events) = db.conference_events(id = conf_id)
-	if len(events) == 0: flask.abort(404)
-
-	return flask.render_template('conference.html',
-		conference = conference,
-		events = events)
-
 @app.route('/conference/<string:abbreviation>')
 def conference_by_name(abbreviation):
 	(conference, events) = db.conference_events(abbreviation = abbreviation)
