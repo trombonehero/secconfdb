@@ -92,6 +92,11 @@ body
 	margin-right: 1em;
 }
 
+#content .block .tags
+{
+	text-align: center;
+}
+
 a
 {
 	color: #1c3553;
@@ -105,12 +110,19 @@ input
 	text-align: center;
 }
 
-table.conferences, table.tags
+table.conferences, table.tags, #content .block
 {
-	background: white;
+	background: rgba(255, 255, 255, 0.8);
 	border: solid 2px #1c3553;
+	margin-top: 1em;
+	margin-bottom: 1em;
 	margin-left: auto;
 	margin-right: auto;
+}
+
+#content .block
+{
+	padding: 0.75em;
 }
 
 table.tags td.submit
