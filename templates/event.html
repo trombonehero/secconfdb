@@ -60,18 +60,18 @@ macro event_row(event, show_deadlines, show_proceedings, utils = None)
 macro event_table(
 	events, show_deadlines = False, show_proceedings = False, utils = None)
 %}
-{% set header_extra = ' rowspan="2"' if show_deadlines else '' %}
+{% set rowspan = 2 if show_deadlines else 1 %}
 <table class="conferences"> 
 	<thead> 
 		<tr> 
 			{% if show_deadlines %}
 			<th colspan="2">Deadlines</th> 
 			{% endif %}
-			<th{{ header_extra}}>Event</th> 
-			<th{{ header_extra}}>Date(s)</th> 
-			<th{{ header_extra}}>Location</th> 
+			<th rowspan="{{ rowspan }}">Event</th> 
+			<th rowspan="{{ rowspan }}">Date(s)</th> 
+			<th rowspan="{{ rowspan }}">Location</th> 
 			{% if show_proceedings %}
-			<th{{ header_extra}}>Proceedings</th>
+			<th rowspan="{{ rowspan }}">Proceedings</th>
 			{% endif %}
 		</tr> 
 		{% if show_deadlines %}
