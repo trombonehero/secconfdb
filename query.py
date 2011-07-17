@@ -52,11 +52,23 @@ class Fields(Clause):
 				"url", "conference", "abbreviation", "Conferences.name AS name",
 				"startDate", "endDate",
 				"deadline", "extendedDeadline", "posterDeadline",
+				"Locations.location AS location_id",
 				"Locations.name AS location",
 				"Regions.name AS region",
 				"Regions.code AS regionCode",
 				"Countries.code AS country",
 				"proceedings", "Conferences.permanentURL"
+			])
+
+	@classmethod
+	def locations(cls):
+		return Fields(
+			[
+				"Locations.location AS location_id",
+				"Locations.name AS location",
+				"Regions.name AS region",
+				"Regions.code AS regionCode",
+				"Countries.code AS country",
 			])
 
 class Source(Clause):
@@ -76,6 +88,13 @@ class Source(Clause):
         LEFT JOIN Regions USING (region)
         INNER JOIN Countries ON ((Locations.country = Countries.country)
                                 OR (Regions.country = Countries.country))""")
+
+	@classmethod
+	def locations(cls):
+		return Source("""Locations
+			LEFT JOIN Regions USING (region)
+			INNER JOIN Countries ON ((Locations.country = Countries.country)
+                                 OR (Regions.country = Countries.country))""")
 
 class Filter(Clause):
 	def __init__(self, value):
@@ -146,6 +165,9 @@ CASE
         END
 """)
 
+	@classmethod
+	def locations(cls):
+		return Order("location")
 
 
 class Query:

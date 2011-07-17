@@ -71,6 +71,22 @@ def recent(tags = []):
 			order = Order.start_date(reverse = True))
 	return query.execute(cursor())
 
+def locations():
+	return Query(
+			source = Source.locations(),
+			fields = Fields.locations(),
+			filter = Filter(None),
+			order = Order.locations()
+		).execute(cursor())
+
+def conferences():
+	return Query(
+			fields = Fields.conference(),
+			source = Source.conference(),
+			filter = Filter(None),
+			order = Order("abbreviation"),
+		).execute(cursor())
+
 def conference(id = None, abbreviation = None):
 	assert (id is not None) ^ (abbreviation is not None)
 
