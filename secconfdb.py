@@ -183,8 +183,12 @@ def update_conference():
 	except ValueError, e:
 		flask.abort(400, e)
 
-	db.update('ConferenceInstances', key = ('instance', int(posted['id'])),
-			values = new_value, credentials = auth.credentials)
+	try:
+		db.update('ConferenceInstances', key = ('instance', int(posted['id'])),
+				values = new_value, credentials = auth.credentials)
+
+	except db.UnauthorizedAccessException, message:
+		return auth.authenticate()
 
 	return flask.redirect('/edit/conference/%s' % abbrev(posted['conference']))
 
