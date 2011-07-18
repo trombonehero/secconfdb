@@ -22,7 +22,7 @@ def requires_auth(f):
 	def decorated(*args, **kwargs):
 		global credentials
 
-		auth = request.authorization
+		auth = flask.request.authorization
 		if not auth: return authenticate()
 
 		credentials.update(auth)
