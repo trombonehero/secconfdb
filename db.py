@@ -6,8 +6,7 @@ import MySQLdb
 from query import Select, Update, Insert, Tables, Fields, Values, Filter, Order
 
 
-def connect(database, username, password):
-
+def cursor(database = 'secconfdb', username = 'secconfdb', password = ''):
 	try:
 		connection = MySQLdb.connect(
 			host = 'localhost', db = database, user = username, passwd = password)
@@ -18,27 +17,10 @@ def connect(database, username, password):
 				SET character_set_connection=utf8;
 			""")
 
-		return connection
+		return connection.cursor()
 
 	except MySQLdb.OperationalError, (errno, message):
-		if errno == 1045: raise UnauthorizedAccessException(message)
-		else: raise
-
-
-db_connection = None
-
-def cursor(database = 'secconfdb', username = 'secconfdb', password = ''):
-	global db_connection
-	if db_connection is None:
-		db_connection = connect(database, username, password)
-
-	try: return db_connection.cursor()
-	except MySQLdb.OperationalError, (errno, message):
-		if errno == 1142: raise UnauthorizedAccessException(message)
-		elif errno == 2006:
-			# Catch dead connection, re-connect
-			db_connection = connect(database, username, password)
-			return db_connection.cursor()
+		if errno in (1045, 1142): raise UnauthorizedAccessException(message)
 		else: raise
 
 
