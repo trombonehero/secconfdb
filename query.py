@@ -76,11 +76,28 @@ class Fields(Clause):
 			])
 
 
+class Values(Clause):
+	""" Table values that we wish to set (e.g. foo = 42). """
+
+	def __init__(self, values):
+		assert values != None
+		assert len(values) > 0
+
+		# Put single quotes around strings, convert None to SQL-friendly NULL.
+		for (name, value) in values.items():
+			if value is None: values[name] = 'NULL'
+			elif isinstance(value, basestring): values[name] = "'%s'" % value
+
+		Clause.__init__(self, 'SET', ', '.join([
+					'%s = %s' % (name, value) for (name, value) in values.items()
+				]))
+
+
 class Tables(Clause):
 	""" Tables (including JOINed tables) that we can operate on. """
-	def __init__(self, value):
+	def __init__(self, value, use_from = True):
 		assert value != None
-		Clause.__init__(self, "FROM", value)
+		Clause.__init__(self, 'FROM' if use_from else '', value)
 
 	@classmethod
 	def conference(cls):
@@ -210,4 +227,19 @@ class Select:
 
 	def __str__(self):
 		return "SELECT" + self.fields + self.source + self.where + self.order
+
+
+class Update:
+	""" Update data in the database. """
+
+	def __init__(self, table, values, filter):
+		self.table = table
+		self.values = values
+		self.filter = filter
+
+	def execute(self, cursor):
+		cursor.execute(self.__str__())
+
+	def __str__(self):
+		return "UPDATE" + self.table + self.values + self.filter
 

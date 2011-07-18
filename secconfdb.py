@@ -2,6 +2,7 @@ import db
 import flask
 import re
 
+import auth
 import utils
 
 app = flask.Flask(__name__)
@@ -151,35 +152,38 @@ def abbrev(s):
 	if valid_abbrev.match(s): return s
 	else: raise ValueError, "'%s' is not a valid conference abbreviation" % s
 
+
 @app.route('/edit/conference/update_event', methods = [ 'POST' ])
+@auth.requires_auth
 def update_conference():
 	new_value = {}
 	posted = flask.request.form
 
+	# POST form -> SQL mapping
 	fields = {
-		'start': date, 'end': date,
-		'deadline': date, 'extended': date, 'posted': date,
-		'url': url, 'proc': url,
-		'location': int,
+		'start':     (date, 'startDate'),
+		'end':       (date, 'endDate'),
+		'deadline':  (date, 'deadline'),
+		'extended':  (date, 'extendedDeadline'),
+		'poster':    (date, 'posterDeadline'),
+		'url':       (url,  'url'),
+		'proc':      (url,  'proceedings'),
+		'location':  (int,  'location'),
 	}
 
 	try:
-		for (name, converter) in fields.items():
+		for (name, (type_converter, field_name)) in fields.items():
 			if not name in posted or len(posted[name]) == 0:
-				new_value[name] = 'NULL'
+				new_value[field_name] = None
 				continue
 
-			new_value[name] = converter(posted[name])
+			new_value[field_name] = type_converter(posted[name])
 
 	except ValueError, e:
 		flask.abort(400, e)
 
-
-	print ("ConferenceInstances", int(posted['id']), """
-		startDate = '%(start)s', endDate = '%(end)s',
-		deadline = '%(deadline)s', extendedDeadline = '%(extended)s',
-		postedDeadline = '%(poster)s'
-		url = '%(url)s', proceedings = '%(proc)s', location = %(location)d""")
+	db.update('ConferenceInstances', key = ('instance', int(posted['id'])),
+			values = new_value, credentials = auth.credentials)
 
 	return flask.redirect('/edit/conference/%s' % abbrev(posted['conference']))
 

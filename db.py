@@ -3,33 +3,41 @@ import re
 
 import MySQLdb
 
-from query import Select, Fields, Tables, Filter, Order
+from query import Select, Update, Tables, Fields, Values, Filter, Order
 
 
-def connect(db = 'secconfdb', user = 'secconfdb', passwd = None):
-	connection = MySQLdb.connect(
-		host = 'localhost', db = 'secconfdb', user = 'secconfdb')
+def connect(database, username, password):
 
-	connection.cursor().execute("""
-			SET NAMES utf8;
-			SET CHARACTER SET utf8;
-			SET character_set_connection=utf8;
-		""")
+	try:
+		connection = MySQLdb.connect(
+			host = 'localhost', db = database, user = username, passwd = password)
 
-	return connection
+		connection.cursor().execute("""
+				SET NAMES utf8;
+				SET CHARACTER SET utf8;
+				SET character_set_connection=utf8;
+			""")
+
+		return connection
+
+	except MySQLdb.OperationalError, (errno, message):
+		if errno == 1045: raise UnauthorizedAccessException(message)
+		else: raise
 
 
 db_connection = None
 
-def cursor():
+def cursor(database = 'secconfdb', username = 'secconfdb', password = ''):
 	global db_connection
-	if db_connection is None: db_connection = connect()
+	if db_connection is None:
+		db_connection = connect(database, username, password)
 
 	try: return db_connection.cursor()
 	except MySQLdb.OperationalError, (errno, message):
-		# Catch dead connection, re-connect
-		if errno == 2006:
-			db_connection = connect()
+		if errno == 1142: raise UnauthorizedAccessException(message)
+		elif errno == 2006:
+			# Catch dead connection, re-connect
+			db_connection = connect(database, username, password)
 			return db_connection.cursor()
 		else: raise
 
@@ -123,4 +131,21 @@ def conference_events(id = None, abbreviation = None):
 
 	return (conf, events)
 
+
+class UnauthorizedAccessException(Exception):
+	def __init__(*args):
+		Exception.__init__(*args)
+
+
+def update(table_name, key, values, credentials):
+	query = Update(
+			table = Tables(table_name, use_from = False),
+			values = Values(values),
+			filter = Filter("%s = %d" % key)
+		)
+
+	try: query.execute(cursor(**credentials))
+	except MySQLdb.OperationalError, (errno, text):
+		if errno == 1142: raise UnauthorizedAccessException(text)
+		else: raise
 
