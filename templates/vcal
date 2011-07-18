@@ -7,8 +7,8 @@ X-WR-CALNAME:{{ title }}
 {% for (abbreviation, description, location, dates) in events %}
 BEGIN:VEVENT
 SUMMARY:{{ abbreviation }}
-DESCRIPTION:{{ description }}
-LOCATION:{{ location }}
+DESCRIPTION:{{ description.replace(',', '\\,').replace(';', '\;') }}
+LOCATION:{{ location.replace(',', '\\,').replace(';', '\;') }}
 {%- if dates.year %}
 DTSTART;VALUE=DATE:{{ dates.strftime("%Y%m%d") }}
 {% else %}
