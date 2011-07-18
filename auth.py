@@ -6,7 +6,7 @@ import db
 
 def authenticate():
 	return flask.Response('Login required', 401,
-			{'WWW-Authenticate': 'Basic realm="Login Required"'})
+			{'WWW-Authenticate': 'Basic realm="SECCONFDB"'})
 
 
 credentials = {
