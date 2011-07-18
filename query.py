@@ -239,6 +239,7 @@ class Update:
 
 	def execute(self, cursor):
 		cursor.execute(self.__str__())
+		cursor.connection.commit()
 
 	def __str__(self):
 		return "UPDATE" + self.table + self.values + self.filter
