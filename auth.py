@@ -4,8 +4,8 @@ import functools
 import db
 
 
-def authenticate():
-	return flask.Response('Login required', 401,
+def authenticate(message = 'Login required'):
+	return flask.Response(message, 401,
 			{'WWW-Authenticate': 'Basic realm="SECCONFDB"'})
 
 
@@ -28,7 +28,8 @@ def requires_auth(f):
 		credentials.update(auth)
 
 		try: db.connect(**credentials)
-		except db.UnauthorizedAccessException: return authenticate()
+		except db.UnauthorizedAccessException, message:
+			return authenticate(message)
 
 		return f(*args, **kwargs)
 	return decorated

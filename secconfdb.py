@@ -188,7 +188,7 @@ def update_conference():
 				values = new_value, credentials = auth.credentials)
 
 	except db.UnauthorizedAccessException, message:
-		return auth.authenticate()
+		return auth.authenticate(message)
 
 	return flask.redirect('/edit/conference/%s' % abbrev(posted['conference']))
 
