@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+
+{% import "edit/controls.html" as controls %}
+
+{% block title %}
+Edit table '{{ table }}'
+{% endblock %}
+
+{% block content %}
+<table class="conferences"> 
+	<thead> 
+		<tr> 
+			{% for header in headers %}
+				<th>{{ header }}</th> 
+			{% endfor %}
+		</tr> 
+	</thead> 
+	<tbody>
+		<tr>
+			<form action="../create" method="post">
+				<input type="hidden" name="table name" value="{{ table }}"/>
+
+				<td>(new)</td>
+				{% for col in headers[1:] %}
+					<td>{{ controls.textbox(col, '') }}</td>
+				{% endfor %}
+				<td><input type="submit" value="Create"/></td>
+			</form>
+		</tr>
+
+		{% for row in values %}
+			<form action="../update" method="post">
+				<input type="hidden" name="table name" value="{{ table }}"/>
+				<input type="hidden" name="table key" value="{{ headers[0] }}"/>
+
+				<tr>
+					{% for col in headers %}
+						<td>
+							{{
+								controls.textbox(
+									col, row.__dict__[col], readonly = (loop.index == 1))
+							}}
+						</td>
+					{% endfor %}
+					<td><input type="submit" value="Update"/></td>
+				</tr>
+			</form>
+		{% endfor %}
+	</tbody>
+</table>
+
+{% endblock %}
+

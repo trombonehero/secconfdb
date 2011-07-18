@@ -79,7 +79,7 @@ class Fields(Clause):
 class Values(Clause):
 	""" Table values that we wish to set (e.g. foo = 42). """
 
-	def __init__(self, values):
+	def __init__(self, action, values):
 		assert values != None
 		assert len(values) > 0
 
@@ -88,9 +88,18 @@ class Values(Clause):
 			if value is None: values[name] = 'NULL'
 			elif isinstance(value, basestring): values[name] = "'%s'" % value
 
-		Clause.__init__(self, 'SET', ', '.join([
-					'%s = %s' % (name, value) for (name, value) in values.items()
-				]))
+		formatted_values = None
+		if action == 'SET':
+			formatted_values = ', '.join([
+					'%s = %s' % (name, value) for (name, value) in values.items() ])
+
+		elif action == 'VALUES':
+			formatted_values = '(%s)' % ', '.join(values.values())
+
+		else:
+			raise ValueError, "Unknown action '%s'" % action
+
+		Clause.__init__(self, action, formatted_values)
 
 
 class Tables(Clause):
@@ -218,7 +227,12 @@ class Select:
 
 		conferences = []
 
+		# Use field names (either from the query, or, in the 'SELECT *' case,
+		# from the DB cursor) to construct a dictionary of values.
 		field_names = self.fields.names()
+		if len(field_names) == 1 and field_names[0] == '*':
+			field_names = [ i[0] for i in cursor.description ]
+
 		for result in results:
 			conferences.append(
 				event.Event(dict(zip(field_names, result))))
@@ -243,4 +257,19 @@ class Update:
 
 	def __str__(self):
 		return "UPDATE" + self.table + self.values + self.filter
+
+class Insert:
+	""" Insert a new entry into the database. """
+
+	def __init__(self, table, fields, values):
+		self.table = table
+		self.fields = fields
+		self.values = values
+
+	def execute(self, cursor):
+		cursor.execute(self.__str__())
+		cursor.connection.commit()
+
+	def __str__(self):
+		return "INSERT INTO" + self.table + '(' + self.fields + ')' + self.values
 

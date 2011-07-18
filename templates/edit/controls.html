@@ -1,5 +1,6 @@
-{% macro textbox(name, value, size = 10) %}
-<input name="{{ name }}" value="{{ value if value }}" size="{{ size }}"/>
+{% macro textbox(name, value, size = 10, readonly = False) %}
+<input name="{{ name }}" value="{{ value if value }}" size="{{ size }}" {%
+	if readonly %} readonly="readonly"{% endif %}/>
 {% endmacro %}
 
 {% macro textarea(name, value, height = 4, width = 60) %}

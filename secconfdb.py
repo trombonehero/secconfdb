@@ -153,6 +153,11 @@ def abbrev(s):
 	if valid_abbrev.match(s): return s
 	else: raise ValueError, "'%s' is not a valid conference abbreviation" % s
 
+valid_text = re.compile('[A-Za-z0-9, \-\_]+$')
+def text(s):
+	if valid_text.match(s): return s
+	else: raise ValueError, "'%s' is not database-safe text" % s
+
 
 @app.route('/edit/conference/update_event', methods = [ 'POST' ])
 @auth.requires_auth
@@ -193,6 +198,66 @@ def update_conference():
 	return flask.redirect('/edit/conference/%s' % abbrev(posted['conference']))
 
 
+
+# Code to edit very simple tables (id -> text)
+@app.route('/edit/simple/<string:table_name>')
+def edit_simple(table_name):
+	values = db.get(table_name)
+
+	headers = []
+	if len(values) > 0: headers = values[0].__dict__.keys()
+
+	return flask.render_template('edit/simple.html',
+			table = table_name,
+			headers = headers,
+			values = values,
+		)
+
+
+@app.route('/edit/update', methods = [ 'post' ])
+@auth.requires_auth
+def update_simple():
+	posted = flask.request.form
+
+	table_name = abbrev(posted['table name'])
+	key_field = abbrev(posted['table key'])
+
+	new_value = {}
+	for key in posted.keys():
+		if key.startswith('table '): continue
+		if key == key_field: continue
+
+		new_value[key] = text(posted[key])
+
+	try:
+		db.update(table_name,
+				key = (key_field, int(posted[key_field])),
+				values = new_value, credentials = auth.credentials)
+
+	except db.UnauthorizedAccessException, message:
+		return auth.authenticate(message)
+
+	return flask.redirect('/edit/simple/%s' % table_name)
+
+
+@app.route('/edit/create', methods = [ 'post' ])
+@auth.requires_auth
+def create_simple():
+	posted = flask.request.form
+	table_name = abbrev(posted['table name'])
+
+	new_value = {}
+	for key in posted.keys():
+		if key.startswith('table '): continue
+		new_value[key] = text(posted[key])
+
+	try:
+		db.create(table_name, values = new_value, credentials = auth.credentials)
+
+	except db.UnauthorizedAccessException, message:
+		return auth.authenticate(message)
+
+	return flask.redirect('/edit/simple/%s' % table_name)
 
 if __name__ == '__main__':
 	app.run(debug = True)

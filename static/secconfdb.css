@@ -11,6 +11,11 @@ body
 	padding: 0;
 }
 
+input[readonly]
+{
+	background: #9eadc0;
+}
+
 #header
 {
 	background: #6d5b85;

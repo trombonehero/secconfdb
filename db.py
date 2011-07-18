@@ -3,7 +3,7 @@ import re
 
 import MySQLdb
 
-from query import Select, Update, Tables, Fields, Values, Filter, Order
+from query import Select, Update, Insert, Tables, Fields, Values, Filter, Order
 
 
 def connect(database, username, password):
@@ -140,7 +140,7 @@ class UnauthorizedAccessException(Exception):
 def update(table_name, key, values, credentials):
 	query = Update(
 			table = Tables(table_name, use_from = False),
-			values = Values(values),
+			values = Values('SET', values),
 			filter = Filter("%s = %d" % key)
 		)
 
@@ -148,4 +148,26 @@ def update(table_name, key, values, credentials):
 	except MySQLdb.OperationalError, (errno, text):
 		if errno == 1142: raise UnauthorizedAccessException(text)
 		else: raise
+
+
+def create(table_name, values, credentials):
+	query = Insert(
+			table = Tables(table_name, use_from = False),
+			fields = Fields(values.keys()),
+			values = Values('VALUES', values),
+		)
+
+	try: query.execute(cursor(**credentials))
+	except MySQLdb.OperationalError, (errno, text):
+		if errno == 1142: raise UnauthorizedAccessException(text)
+		else: raise
+
+
+def get(table_name):
+	return Select(
+			source = Tables(table_name),
+			fields = Fields('*'),
+			filter = Filter(None),
+			order = Order(None),
+		).execute(cursor())
 
