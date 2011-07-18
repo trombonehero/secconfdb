@@ -23,9 +23,10 @@ _gaq.push(['_trackPageview']);
 	</head> 
  
  
+	{% set hostname = request.host[ : request.host.find(':')] %}
 	<body> 
 		<div id="header">
-			<h1>securityconferences.net</h1> 
+			<h1>{{ hostname }}</h1>
 			<h2>{{ self.title() }}</h2>
 		</div>
  
