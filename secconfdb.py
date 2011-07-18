@@ -1,5 +1,6 @@
 import db
 import flask
+import re
 
 import utils
 
@@ -111,6 +112,8 @@ def deadline_calendar():
 	return utils.make_vcal(events, 'Conference Deadlines')
 
 
+
+# Code for editing conferences and their events.
 @app.route('/edit/conference/<string:abbreviation>')
 def edit_conference(abbreviation):
 	""" Edit a particular conference (e.g. all events). """
@@ -130,6 +133,56 @@ def edit_conference(abbreviation):
 			events = events,
 			locations = locations,
 		)
+
+
+
+valid_date = re.compile('[0-9]{4}-[0-9]{1,2}-[0-9]{1,2}$')
+def date(s):
+	if valid_date.match(s): return s
+	else: raise ValueError, "'%s' is not a valid date (YYYY-MM-DD)" % s
+
+valid_url = re.compile('https?://[a-z0-9\-\_\.\/]+$')
+def url(s):
+	if valid_url.match(s): return s
+	else: raise ValueError, "'%s' is not a valid URL" % s
+
+valid_abbrev = re.compile('[A-Za-z\-]+$')
+def abbrev(s):
+	if valid_abbrev.match(s): return s
+	else: raise ValueError, "'%s' is not a valid conference abbreviation" % s
+
+@app.route('/edit/conference/update_event', methods = [ 'POST' ])
+def update_conference():
+	new_value = {}
+	posted = flask.request.form
+
+	fields = {
+		'start': date, 'end': date,
+		'deadline': date, 'extended': date, 'posted': date,
+		'url': url, 'proc': url,
+		'location': int,
+	}
+
+	try:
+		for (name, converter) in fields.items():
+			if not name in posted or len(posted[name]) == 0:
+				new_value[name] = 'NULL'
+				continue
+
+			new_value[name] = converter(posted[name])
+
+	except ValueError, e:
+		flask.abort(400, e)
+
+
+	print ("ConferenceInstances", int(posted['id']), """
+		startDate = '%(start)s', endDate = '%(end)s',
+		deadline = '%(deadline)s', extendedDeadline = '%(extended)s',
+		postedDeadline = '%(poster)s'
+		url = '%(url)s', proceedings = '%(proc)s', location = %(location)d""")
+
+	return flask.redirect('/edit/conference/%s' % abbrev(posted['conference']))
+
 
 
 if __name__ == '__main__':
