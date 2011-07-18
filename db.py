@@ -120,9 +120,11 @@ def conference_events(id = None, abbreviation = None):
 	if conf['parent']:
 		conf['parent'] = conference(id = int(conf['parent']))
 
-	if len(conf['tags']) > 0:
+	if conf['tags'] and len(conf['tags']) > 0:
 		conf['tags'] = [
 			name for (id, name) in get_tags(ids = conf['tags'].split(',')) ]
+	else:
+		conf['tags'] = []
 
 	events = Select(
 			filter = Filter('conference = %d' % conf['conference']),
