@@ -49,6 +49,7 @@ class Fields(Clause):
 	def events(cls):
 		return Fields(
 			[
+				"instance",
 				"url", "conference", "abbreviation", "Conferences.name AS name",
 				"startDate", "endDate",
 				"deadline", "extendedDeadline", "posterDeadline",
