@@ -29,6 +29,10 @@
 					<td><input name="tags" value="{{ ', '.join(conference.tags) if conference.tags }}"/></td>
 				</tr>
 				<tr>
+					<td></td>
+					<td>({{ ' | '.join(all_tags) }})</td>
+				</tr>
+				<tr>
 					<td>Description</td>
 					<td>
 						<textarea name="desc" rows="6" cols="80">{{
