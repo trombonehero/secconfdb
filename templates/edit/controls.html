@@ -1,0 +1,13 @@
+{% macro textbox(name, value, size = 10) %}
+<input name="{{ name }}" value="{{ value if value }}" size="{{ size }}"/>
+{% endmacro %}
+
+{% macro select(name, options, current_id) %}
+<select name="{{ name }}">
+	{% for (id, text) in options %}
+		<option value="{{ id }}" {{ "selected" if id == current_id }}>
+			{{ text }}
+		</option>
+	{% endfor %}
+</select>
+{% endmacro %}

@@ -111,6 +111,27 @@ def deadline_calendar():
 	return utils.make_vcal(events, 'Conference Deadlines')
 
 
+@app.route('/edit/conference/<string:abbreviation>')
+def edit_conference(abbreviation):
+	""" Edit a particular conference (e.g. all events). """
+	(conference, events) = db.conference_events(abbreviation = abbreviation)
+	if len(events) == 0: flask.abort(404)
+
+	conferences = [
+		(c.conference, '%s: %s' % (c.abbreviation, c.name))
+			for c in db.conferences() ]
+
+	locations = [
+		(l.location_id, l.where()) for l in db.locations() ]
+
+	return flask.render_template('edit/conference.html',
+			conferences = conferences,
+			conference = conference,
+			events = events,
+			locations = locations,
+		)
+
+
 if __name__ == '__main__':
 	app.run(debug = True)
 
