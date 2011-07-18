@@ -159,6 +159,47 @@ def text(s):
 	else: raise ValueError, "'%s' is not database-safe text" % s
 
 
+@app.route('/edit/conference/create_event', methods = [ 'POST' ])
+@auth.requires_auth
+def create_event():
+	new_value = {}
+	posted = flask.request.form
+	print posted
+
+	# POST form -> SQL mapping
+	fields = {
+		'start':     (date, 'startDate'),
+		'end':       (date, 'endDate'),
+		'deadline':  (date, 'deadline'),
+		'extended':  (date, 'extendedDeadline'),
+		'poster':    (date, 'posterDeadline'),
+		'url':       (url,  'url'),
+		'proc':      (url,  'proceedings'),
+		'conference':(int,  'conference'),
+		'location':  (int,  'location'),
+	}
+
+	try:
+		for (name, (type_converter, field_name)) in fields.items():
+			if not name in posted or len(posted[name]) == 0:
+				new_value[field_name] = None
+				continue
+
+			new_value[field_name] = str(type_converter(posted[name]))
+
+	except ValueError, e:
+		flask.abort(400, e)
+
+	try:
+		db.create('ConferenceInstances', values = new_value,
+				credentials = auth.credentials)
+
+	except db.UnauthorizedAccessException, message:
+		return auth.authenticate(message)
+
+	return flask.redirect('/edit/conference/%s' % posted['abbreviation'])
+
+
 @app.route('/edit/conference/update_event', methods = [ 'POST' ])
 @auth.requires_auth
 def update_conference():

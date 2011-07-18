@@ -68,6 +68,24 @@
 		</tr> 
 	</thead> 
 	<tbody>
+		<tr>
+			<form action="create_event" method="post">
+				<input type="hidden" name="conference" value="{{
+					conference.conference }}"/>
+				<input type="hidden" name="abbreviation" value="{{
+					conference.abbreviation }}"/>
+				<td>{{ controls.textbox('start', None, 10) }}</td>
+				<td>{{ controls.textbox('end', None, 10) }}</td>
+				<td>{{ controls.select('location', locations, None) }}</td>
+				<td>{{ controls.textbox('deadline', None, 10) }}</td>
+				<td>{{ controls.textbox('extended', None, 10) }}</td>
+				<td>{{ controls.textbox('poster', None, 10) }}</td>
+				<td>{{ controls.textbox('url', None, 40) }}</td>
+				<td>{{ controls.textbox('proc', None, 40) }}</td>
+				<td><input type="submit" value="Create"/></td>
+			</form>
+		</tr>
+
 		{% for e in events %}
 			<form action="update_event" method="post">
 				<input type="hidden" name="conference" value="{{ e.abbreviation }}"/>
