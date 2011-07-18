@@ -2,6 +2,12 @@
 <input name="{{ name }}" value="{{ value if value }}" size="{{ size }}"/>
 {% endmacro %}
 
+{% macro textarea(name, value, height = 4, width = 60) %}
+<textarea name="{{ name }}" rows="{{ height }}" cols="{{ width }}">{{
+	value if value
+}}</textarea>
+{% endmacro %}
+
 {% macro select(name, options, current_id) %}
 <select name="{{ name }}">
 	{% for (id, text) in options %}

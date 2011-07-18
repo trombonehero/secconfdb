@@ -21,12 +21,13 @@
 				</tr>
 				<tr>
 					<td>URL</td>
-					<td><input name="url" value="{{
-						conference.url if conference.url }}"/></td>
+					<td>{{ controls.textbox('url', conference.url, 60) }}</td>
 				</tr>
 				<tr>
 					<td>Tags</td>
-					<td><input name="tags" value="{{ ', '.join(conference.tags) if conference.tags }}"/></td>
+					<td>
+						{{ controls.textbox('tags', ', '.join(conference.tags), 60) }}
+					</td>
 				</tr>
 				<tr>
 					<td></td>
@@ -35,9 +36,7 @@
 				<tr>
 					<td>Description</td>
 					<td>
-						<textarea name="desc" rows="6" cols="80">{{
-							conference.description
-						}}</textarea>
+						{{ controls.textarea('desc', conference.description, 6, 80) }}
 					</td>
 				</tr>
 				<tr>
