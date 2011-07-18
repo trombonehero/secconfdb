@@ -67,6 +67,8 @@
 	<tbody>
 		{% for e in events %}
 			<form action="update_event" method="post">
+				<input type="hidden" name="conference" value="{{ e.abbreviation }}"/>
+				<input type="hidden" name="id" value="{{ e.instance }}"/>
 				<tr>
 					<td>{{ controls.textbox('start', e.startDate, 10) }}</td>
 					<td>{{ controls.textbox('end', e.endDate, 10) }}</td>
