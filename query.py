@@ -26,13 +26,16 @@ class Clause:
 		else: return " ".join([str(s), self.operator, self.value])
 
 
+
 class Fields(Clause):
+	""" Table fields that we wish to refer to (e.g. to SELECT on). """
+
 	def __init__(self, fields):
 		assert fields != None
 		assert len(fields) > 0
 
 		self.fields = fields
-		Clause.__init__(self, "SELECT", ",".join(fields))
+		Clause.__init__(self, "", ",".join(fields))
 
 	def names(self):
 		return [ re.sub(".* AS ", "", name) for name in self.fields ]
@@ -72,18 +75,20 @@ class Fields(Clause):
 				"Countries.code AS country",
 			])
 
-class Source(Clause):
+
+class Tables(Clause):
+	""" Tables (including JOINed tables) that we can operate on. """
 	def __init__(self, value):
 		assert value != None
 		Clause.__init__(self, "FROM", value)
 
 	@classmethod
 	def conference(cls):
-		return Source("Conferences")
+		return Tables("Conferences")
 
 	@classmethod
 	def events(cls):
-		return Source("""ConferenceInstances
+		return Tables("""ConferenceInstances
         INNER JOIN Conferences USING (conference)
         INNER JOIN Locations USING (location)
         LEFT JOIN Regions USING (region)
@@ -92,12 +97,15 @@ class Source(Clause):
 
 	@classmethod
 	def locations(cls):
-		return Source("""Locations
+		return Tables("""Locations
 			LEFT JOIN Regions USING (region)
 			INNER JOIN Countries ON ((Locations.country = Countries.country)
                                  OR (Regions.country = Countries.country))""")
 
+
 class Filter(Clause):
+	""" A filter which restricts a query (e.g. WHERE foo > 42). """
+
 	def __init__(self, value):
 		Clause.__init__(self, "WHERE", value)
 
@@ -143,6 +151,8 @@ class Filter(Clause):
 
 
 class Order(Clause):
+	""" An ordering constraint (e.g. ORDER BY date). """
+
 	def __init__(self, value):
 		Clause.__init__(self, "ORDER BY", value)
 
@@ -171,12 +181,14 @@ CASE
 		return Order("location")
 
 
-class Query:
+class Select:
+	""" Get data from the database. """
+
 	def __init__(self,
 			filter,
 			order = Order.start_date(),
 			fields = Fields.events(),
-			source = Source.events()):
+			source = Tables.events()):
 
 		self.where = filter
 		self.order = order
@@ -197,5 +209,5 @@ class Query:
 		return conferences
 
 	def __str__(self):
-		return self.fields + self.source + self.where + self.order
+		return "SELECT" + self.fields + self.source + self.where + self.order
 

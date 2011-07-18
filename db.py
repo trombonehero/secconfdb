@@ -3,7 +3,7 @@ import re
 
 import MySQLdb
 
-from query import Query, Fields, Source, Filter, Order
+from query import Select, Fields, Tables, Filter, Order
 
 
 def connect(db = 'secconfdb', user = 'secconfdb', passwd = None):
@@ -42,9 +42,9 @@ def get_tags(names = None, ids = None):
 	if ids is not None:
 		where = Filter("tag in (%s)" % ','.join(ids))
 
-	query = Query(
+	query = Select(
 			fields = Fields([ 'tag', 'name' ]),
-			source = Source('Tags'),
+			source = Tables('Tags'),
 			filter = where,
 			order = Order('name'))
 
@@ -54,35 +54,35 @@ def get_tags(names = None, ids = None):
 
 
 def deadlines(tags = []):
-	query = Query(
+	query = Select(
 			filter = Filter.upcomingDeadlines() & Filter.tags(tags),
 			order = Order.deadline())
 	return query.execute(cursor())
 
 def upcoming(tags = []):
-	query = Query(
+	query = Select(
 			filter = Filter.upcoming() & Filter.tags(tags),
 			order = Order.start_date())
 	return query.execute(cursor())
 
 def recent(tags = []):
-	query = Query(
+	query = Select(
 			filter = Filter.recent() & Filter.tags(tags),
 			order = Order.start_date(reverse = True))
 	return query.execute(cursor())
 
 def locations():
-	return Query(
-			source = Source.locations(),
+	return Select(
+			source = Tables.locations(),
 			fields = Fields.locations(),
 			filter = Filter(None),
 			order = Order.locations()
 		).execute(cursor())
 
 def conferences():
-	return Query(
+	return Select(
 			fields = Fields.conference(),
-			source = Source.conference(),
+			source = Tables.conference(),
 			filter = Filter(None),
 			order = Order("abbreviation"),
 		).execute(cursor())
@@ -96,9 +96,9 @@ def conference(id = None, abbreviation = None):
 
 	c = cursor()
 
-	conferences = Query(
+	conferences = Select(
 			fields = Fields.conference(),
-			source = Source.conference(),
+			source = Tables.conference(),
 			filter = filter,
 			order = Order(None),
 		).execute(c)
@@ -116,7 +116,7 @@ def conference_events(id = None, abbreviation = None):
 		conf['tags'] = [
 			name for (id, name) in get_tags(ids = conf['tags'].split(',')) ]
 
-	events = Query(
+	events = Select(
 			filter = Filter('conference = %d' % conf['conference']),
 			order = Order.start_date(reverse = True),
 		).execute(cursor())
