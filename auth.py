@@ -27,7 +27,7 @@ def requires_auth(f):
 
 		credentials.update(auth)
 
-		try: db.connect(**credentials)
+		try: db.cursor(**credentials)
 		except db.UnauthorizedAccessException, message:
 			return authenticate(message)
 
