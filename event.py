@@ -44,6 +44,14 @@ class Event:
 		return date.strftime("%d %b %Y").lstrip("0")
 
 
+	def tag_names(self, all_tags):
+		if 'tags' not in self.__dict__: return []
+		if self.tags is None: return []
+
+		my_tags = [ int(i) for i in self.tags.split(',') ]
+		return ', '.join([ all_tags[i] for i in my_tags ])
+
+
 	def proceedings_site(self):
 		""" Return the hostname that proceedings can be found on. """
 		if self.proceedings is None: return None
