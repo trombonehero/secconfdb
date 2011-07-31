@@ -1,7 +1,31 @@
+@font-face
+{
+	font-family: "Droid Sans";
+	src: url(DroidSans-Regular.ttf) format("truetype");
+}
+
+@font-face
+{
+	font-family: "Droid Sans Bold";
+	src: url(DroidSans-Bold.ttf) format("truetype");
+}
+
+@font-face
+{
+	font-family: "Muli";
+	src: url(Muli-Regular.ttf) format("truetype");
+}
+
+@font-face
+{
+	font-family: "Play";
+	src: url(Play-Regular.ttf) format("truetype");
+}
+
 html
 {
 	background: #9eadc0;
-	font-family: sans-serif;
+	font-family: "Droid Sans", sans-serif;
 	font-size: smaller;
 	padding: 0;
 }
@@ -61,13 +85,20 @@ input[readonly]
 
 #header h1
 {
+	font-family: "Play";
 	position: absolute;
 	right: 0.5em;
 }
 
 #header h2
 {
+	font-family: "Muli";
 	margin-left: 0.5em;
+}
+
+h2
+{
+	font-family: "Play";
 }
 
 #content h2
@@ -79,6 +110,7 @@ input[readonly]
 #content a:hover
 {
 	color: #7f6b2a;
+	color: #9d8bb5;
 }
 
 #footer a
@@ -97,7 +129,7 @@ input[readonly]
 	margin-right: 1em;
 }
 
-#content .block .tags
+#content .tags
 {
 	text-align: center;
 }
@@ -113,6 +145,7 @@ input[readonly]
 a
 {
 	color: #1c3553;
+	font-family: "Droid Sans Bold";
 	font-weight: bold;
 	text-decoration: none;
 }
