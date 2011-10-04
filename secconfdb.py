@@ -1,3 +1,5 @@
+#!/usr/bin/python
+
 import db
 import flask
 import re
