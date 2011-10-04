@@ -218,7 +218,7 @@ def create_event():
 
 @app.route('/edit/conference/update_event', methods = [ 'POST' ])
 @auth.requires_auth
-def update_conference():
+def update_event():
 	new_value = {}
 	posted = flask.request.form
 
