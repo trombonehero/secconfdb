@@ -69,6 +69,18 @@ def locations():
 			order = Order.locations()
 		).execute(cursor())
 
+def most_recent():
+	return Select(
+			fields = Fields.events(),
+			source = Tables.events(),
+			filter = Filter("""
+	startDate = (
+		select max(startDate) from ConferenceInstances as ci
+			where ci.conference = ConferenceInstances.conference)
+	"""),
+			order = Order("startDate"),
+		).execute(cursor())
+
 def conferences():
 	return Select(
 			fields = Fields.conference(),
