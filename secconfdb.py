@@ -167,6 +167,11 @@ def text(s):
 	if valid_text.match(s): return s
 	else: raise ValueError, "'%s' is not database-safe text" % s
 
+valid_tags = re.compile('[a-z ,]+$')
+def tags(s):
+	if valid_tags.match(s): return [ int(i) for i in s.split(',') ]
+	else: raise ValueError, "'%s' is not database-safe text" % s
+
 
 @app.route('/edit/conference/create_event', methods = [ 'POST' ])
 @auth.requires_auth
