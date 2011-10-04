@@ -300,6 +300,55 @@ def create_simple():
 
 	return flask.redirect('/edit/simple/%s' % table_name)
 
+
+# Code to edit conferences
+@app.route('/edit/conferences')
+def edit_conferences():
+	conferences = db.conferences()
+	parents = [ (None, '') ] + [
+		(c.conference, '%s: %s' % (c.abbreviation, c.name)) for c in conferences
+	]
+
+	tags = dict(db.get_tags())
+
+	return flask.render_template('edit/conferences.html',
+			table = 'Conferences',
+			tags = tags,
+			conferences = conferences,
+			parents = parents,
+			prototype = event.Event,
+		)
+
+@app.route('/edit/create_conference', methods = [ 'post' ])
+@auth.requires_auth
+def create_conference():
+	posted = flask.request.form
+	new_value = {}
+
+	# POST form -> SQL mapping
+	fields = {
+		'name':      (text, 'name'),
+		'abbrev':    (text, 'abbreviation'),
+		'desc':      (text, 'description'),
+		'tags':      (tags, 'tags'),
+		'parent':    (int,  'parent'),
+		'url':       (url,  'url'),
+	}
+
+	try:
+		for (name, (type_converter, field_name)) in fields.items():
+			if not name in posted or len(posted[name]) == 0:
+				new_value[field_name] = None
+				continue
+
+			new_value[field_name] = type_converter(posted[name])
+
+	except ValueError, e:
+		flask.abort(400, e)
+
+	return str('<br/>'.join([ '%s: %s' % i for i in posted.items() ]))
+
+
 if __name__ == '__main__':
 	app.run(debug = True)
 

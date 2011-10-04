@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+
+{% import "edit/controls.html" as controls %}
+
+{% block title %}
+Edit table '{{ table }}'
+{% endblock %}
+
+{% macro render_conference(conf, action_name = 'Update') %}
+{{ controls.hidden('id', conf.conference) }}
+
+<table class="conferences"> 
+<tr>
+	<td>{{ controls.textbox('abbrev', conf.abbreviation, 20) }}</td>
+	<td>{{ controls.textbox('name', conf.name, 80) }}</td>
+</tr>
+<tr>
+	<td>{{ controls.textbox('tags', conf.tag_names(tags), 20) }}</td>
+	<td>{{ controls.textbox('url', conf.url, 80) }}</td>
+</tr>
+<tr>
+	<td colspan="2">{{ controls.textarea('desc', conf.description, 5, 80) }}</td>
+</tr>
+<tr>
+	<td colspan="2">{{ controls.select('parent', parents, conf.parent) }}</td>
+	<td><input type="submit" value="{{ action_name }}"/></td>
+</tr>
+</table>
+{% endmacro %}
+
+{% block content %}
+<div class="navleft">
+	<h2>Tags</h2>
+	{% set tags = tags.values() %}
+	{% set _ = tags.sort() %}
+	{% for tag in tags %}
+		{{ tag }}<br/>
+	{% endfor %}
+</div>
+
+<form action="create_conference" method="post">
+	{{ render_conference(prototype({ 'conference': '(new)' }), 'Create') }}
+</form>
+
+{% for conf in conferences %}
+	<form action="update_conference" method="post">
+		{{ render_conference(conf) }}
+	</form>
+{% endfor %}
+
+{% endblock %}
+
