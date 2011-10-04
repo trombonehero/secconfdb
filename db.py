@@ -20,7 +20,7 @@ def cursor(database = 'secconfdb', username = 'secconfdb', password = ''):
 		return connection.cursor()
 
 	except MySQLdb.OperationalError, (errno, message):
-		if errno in (1045, 1142): raise UnauthorizedAccessException(message)
+		if errno in (1044, 1045, 1142): raise UnauthorizedAccessException(message)
 		else: raise
 
 
