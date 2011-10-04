@@ -8,7 +8,9 @@
 	<thead> 
 		<tr> 
 			<th>Series</th>
-			<th>Last Event</th>
+			<th>URL</th>
+			<th>Last Held</th>
+			<th>Last URL</th>
 		</tr> 
 	</thead> 
 	<tbody>
@@ -19,7 +21,21 @@
 						{{ c.abbreviation }}
 					</a>
 				</td>
+				<td>
+					{% if c.conf_url %}
+						<a href="{{ c.conf_url }}" target="_blank">{{
+							c.conf_url.split('/')[2]
+						}}</a>
+					{% endif %}
+				</td>
 				<td>{{ c.when() }}</td>
+				<td>
+					{% if c.url %}
+						<a href="{{ c.url }}" target="_blank">{{
+							c.url.split('/')[2]
+						}}</a>
+					{% endif %}
+				</td>
 			</tr>
 <!--
 			(0, 'tooLate'),

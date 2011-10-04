@@ -61,7 +61,7 @@ class Fields(Clause):
 				"Regions.name AS region",
 				"Regions.code AS regionCode",
 				"Countries.code AS country",
-				"proceedings", "Conferences.permanentURL"
+				"proceedings", "Conferences.permanentURL AS conf_url"
 			])
 
 	@classmethod
