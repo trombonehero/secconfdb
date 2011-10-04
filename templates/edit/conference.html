@@ -3,12 +3,12 @@
 {% import "edit/controls.html" as controls %}
 
 {% block title %}
-{{ conference.abbreviation }}: {{ conference.name }}
+{{ conference.abbreviation }}
 {% endblock %}
 
 {% block content %}
 <div class="block">
-	<h2>{{ conference.abbreviation }}</h2>
+	<h2>{{ conference.name }}</h2>
 
 	<form action="update_conference" method="post">
 		<table>

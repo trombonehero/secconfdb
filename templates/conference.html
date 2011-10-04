@@ -3,17 +3,20 @@
 {% import 'event.html' as event %}
 
 {% block title %}
-{{ conference.abbreviation }}: {{ conference.name }}
+{{ conference.abbreviation }}
 {% endblock %}
 
 {% block content %}
 <div class="block">
 <h2>
-{{ conference.abbreviation }}
-{% if conference.url %}
-(<a href="{{ conference.url }}">{{ conference.url }}</a>)
-{% endif %}
+{{ conference.name }}
 </h2>
+
+{% if conference.url %}
+<p>
+<a href="{{ conference.url }}">{{ conference.url }}</a>
+</p>
+{% endif %}
 
 {% if conference.tags %}
 <p class="tags">{{ ' | '.join(conference.tags) }}</p>
