@@ -139,12 +139,15 @@ def edit_conference(abbreviation):
 	locations = [
 		(l.location_id, l.where()) for l in db.locations() ]
 
+	meeting_types = [ (m.type_id, m.name) for m in db.meeting_types() ]
+
 	return flask.render_template('edit/conference.html',
 			all_tags = [ name for (id, name) in db.get_tags() ],
 			conferences = conferences,
 			conference = conference,
 			events = events,
 			locations = locations,
+			meeting_types = meeting_types,
 		)
 
 

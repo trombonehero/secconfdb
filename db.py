@@ -69,6 +69,14 @@ def locations():
 			order = Order.locations()
 		).execute(cursor())
 
+def meeting_types():
+	return Select(
+			source = Tables('MeetingTypes'),
+			fields = Fields.meeting_types(),
+			filter = Filter(None),
+			order  = Order(None),
+		).execute(cursor())
+
 def most_recent():
 	return Select(
 			fields = Fields.events(),

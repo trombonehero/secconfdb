@@ -45,7 +45,7 @@ class Fields(Clause):
 		return Fields(
 			[
 				'conference', 'parent', 'name', 'abbreviation', 'description',
-				'permanentURL AS url', 'tags'
+				'permanentURL AS url', '`meeting-type` AS type_id', 'tags'
 			])
 
 	@classmethod
@@ -74,6 +74,10 @@ class Fields(Clause):
 				"Regions.code AS regionCode",
 				"Countries.code AS country",
 			])
+
+	@classmethod
+	def meeting_types(cls):
+		return Fields([ "`meeting-type` AS type_id", "name" ])
 
 
 class Values(Clause):

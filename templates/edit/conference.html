@@ -14,6 +14,12 @@
 		<table>
 			<tbody>
 				<tr>
+					<td>Type</td>
+					<td>{{
+						controls.select("type", meeting_types, conference.type_id)
+					}}</td>
+				</tr>
+				<tr>
 					<td>Parent</td>
 					<td>{{
 						controls.select("parent", conferences, conference.parent)
