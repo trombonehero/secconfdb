@@ -142,18 +142,18 @@ class Filter(Clause):
 		return Filter('(%s) AND (%s)' % (self.value, other.value))
 
 	@classmethod
+	def by_date(cls, min_days, max_days):
+		return Filter(
+			"startDate BETWEEN ADDDATE(CURDATE(), %d) AND ADDDATE(CURDATE(), %d)"
+			% (min_days, max_days))
+
+	@classmethod
 	def recent(cls):
-		return Filter("""
-	DATEDIFF(startDate, CURDATE()) < 0
-	AND DATEDIFF(startDate, CURDATE()) >= -180
-	""")
+		return Filter.by_date(-180, 0)
 
 	@classmethod
 	def upcoming(cls):
-		return Filter("""
-	DATEDIFF(startDate, CURDATE()) >= 0
-	AND DATEDIFF(startDate, CURDATE()) <= 180
-	""")
+		return Filter.by_date(0, 365)
 
 	@classmethod
 	def upcomingDeadlines(cls):
