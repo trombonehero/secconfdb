@@ -1,3 +1,7 @@
+{% macro hidden(name, value) %}
+<input type="hidden" name="{{ name }}" value="{{ value if value }}"/>
+{% endmacro %}
+
 {% macro textbox(name, value, size = 10, readonly = False) %}
 <input name="{{ name }}" value="{{ value if value }}" size="{{ size }}" {%
 	if readonly %} readonly="readonly"{% endif %}/>
