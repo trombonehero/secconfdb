@@ -11,6 +11,9 @@
 	<h2>{{ conference.name }}</h2>
 
 	<form action="update_conference" method="post">
+		<input type="hidden" name="id" value="{{ conference.conference }}"/>
+		<input type="hidden" name="abbrev" value="{{ conference.abbreviation }}"/>
+
 		<table>
 			<tbody>
 				<tr>
