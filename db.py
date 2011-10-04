@@ -83,7 +83,7 @@ def most_recent():
 			source = Tables.events(),
 			filter = Filter("""
 	startDate = (
-		select max(startDate) from ConferenceInstances as ci
+		select max(startDate) from ConferenceInstances AS ci
 			where ci.conference = ConferenceInstances.conference)
 	"""),
 			order = Order("startDate"),
