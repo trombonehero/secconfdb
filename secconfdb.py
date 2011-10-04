@@ -261,6 +261,45 @@ def update_event():
 	return flask.redirect('/edit/conference/%s' % abbrev(posted['conference']))
 
 
+@app.route('/edit/conference/update_conference', methods = [ 'POST' ])
+@auth.requires_auth
+def update_conference():
+	new_value = {}
+	posted = flask.request.form
+
+	# POST form -> SQL mapping
+	fields = {
+		'name':      (str,    'name'),
+		'abbrev':    (abbrev, 'abbreviation'),
+		'type':      (int,    '`meeting-type`'),
+		'parent':    (int,    'parent'),
+		'url':       (url,    'permanentURL'),
+		'desc':      (str,    'description'),
+		'tags':      (tags,   'tags'),
+	}
+	conference_id = int(posted['id'])
+
+	try:
+		for (name, (type_converter, field_name)) in fields.items():
+			if not name in posted or len(posted[name]) == 0:
+				new_value[field_name] = None
+				continue
+
+			new_value[field_name] = type_converter(posted[name])
+
+	except ValueError, e:
+		flask.abort(400, e)
+
+	try:
+		db.update('Conferences', key = ('conference', conference_id),
+				values = new_value, credentials = auth.credentials)
+
+	except db.UnauthorizedAccessException, message:
+		return auth.authenticate(message)
+
+	abbrev_noquotes = new_value['abbreviation'][1:-1]
+	return flask.redirect('/edit/conference/%s' % abbrev_noquotes)
+
 
 # Code to edit very simple tables (id -> text)
 @app.route('/edit/simple/<string:table_name>')
