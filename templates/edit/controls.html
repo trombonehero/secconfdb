@@ -15,6 +15,7 @@
 
 {% macro select(name, options, current_id) %}
 <select name="{{ name }}">
+	<option value=""></option>
 	{% for (id, text) in options %}
 		<option value="{{ id }}" {{ "selected" if id == current_id }}>
 			{{ text }}
