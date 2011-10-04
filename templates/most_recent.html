@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+
+{% block title %}Most recent conference instances{% endblock %}
+
+{% block content %}
+
+<table class="conferences"> 
+	<thead> 
+		<tr> 
+			<th>Series</th>
+			<th>Last Event</th>
+		</tr> 
+	</thead> 
+	<tbody>
+		{% for c in conferences %}
+			<tr>
+				<td>
+					<a href="edit/conference/{{ c.abbreviation}}">
+						{{ c.abbreviation }}
+					</a>
+				</td>
+				<td>{{ c.when() }}</td>
+			</tr>
+<!--
+			(0, 'tooLate'),
+			(7, 'reallySoon'),
+			(28, 'soon'),
+			(90, 'notSoon')):
+-->
+		{% endfor %}
+	</tbody>
+</table>
+ 
+{% endblock %}
+

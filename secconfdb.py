@@ -63,6 +63,15 @@ def setprefs():
 	return response
 
 
+@app.route('/most_recent')
+def most_recent():
+	""" What conferences do we need to update? """
+	return flask.render_template('most_recent.html',
+			year = 2011,
+			conferences = db.most_recent(),
+			utils = utils)
+
+
 # vCal files for upcoming conferences and deadlines.
 @app.route('/conferences.ics')
 def conference_calendar():
