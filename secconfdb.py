@@ -350,7 +350,11 @@ def create_simple():
 	new_value = {}
 	for key in posted.keys():
 		if key.startswith('table '): continue
-		value = text(posted[key])
+
+		value = posted[key]
+		if value.startswith('http'): value = url(value)
+		else: value = text(posted[key])
+
 		if value == '': continue
 
 		if '-' in key: key = '`%s`' % key
