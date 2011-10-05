@@ -130,7 +130,6 @@ def deadline_calendar():
 def edit_conference(abbreviation):
 	""" Edit a particular conference (e.g. all events). """
 	(conference, events) = db.conference_events(abbreviation = abbreviation)
-	if len(events) == 0: flask.abort(404)
 
 	conferences = [
 		(c.conference, '%s: %s' % (c.abbreviation, c.name))
