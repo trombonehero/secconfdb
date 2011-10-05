@@ -352,6 +352,7 @@ def create_simple():
 	for key in posted.keys():
 		if key.startswith('table '): continue
 		value = text(posted[key])
+		if value == '': continue
 
 		if '-' in key: key = '`%s`' % key
 		new_value[key] = value
