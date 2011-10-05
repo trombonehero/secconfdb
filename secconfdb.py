@@ -351,7 +351,10 @@ def create_simple():
 	new_value = {}
 	for key in posted.keys():
 		if key.startswith('table '): continue
-		new_value[key] = text(posted[key])
+		value = text(posted[key])
+
+		if '-' in key: key = '`%s`' % key
+		new_value[key] = value
 
 	try:
 		db.create(table_name, values = new_value, credentials = auth.credentials)
