@@ -17,6 +17,10 @@
 		<table>
 			<tbody>
 				<tr>
+					<td>Name</td>
+					<td>{{ controls.textbox('name', conference.name, 60) }}</td>
+				</tr>
+				<tr>
 					<td>Type</td>
 					<td>{{
 						controls.select("type", meeting_types, conference.type_id)
