@@ -157,7 +157,7 @@ def date(s):
 	if valid_date.match(s): return s
 	else: raise ValueError, "'%s' is not a valid date (YYYY-MM-DD)" % s
 
-valid_url = re.compile('https?://[A-Za-z0-9\-\_\.\/]+$')
+valid_url = re.compile('https?://[A-Za-z0-9\-\_\.\/%&=\?]+$')
 def url(s):
 	if valid_url.match(s): return s
 	else: raise ValueError, "'%s' is not a valid URL" % s
