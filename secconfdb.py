@@ -162,7 +162,7 @@ def url(s):
 	if valid_url.match(s): return s
 	else: raise ValueError, "'%s' is not a valid URL" % s
 
-valid_abbrev = re.compile('[A-Za-z0-9\-]+$')
+valid_abbrev = re.compile('[A-Za-z0-9\-\.]+$')
 def abbrev(s):
 	if valid_abbrev.match(s): return s
 	else: raise ValueError, "'%s' is not a valid conference abbreviation" % s
