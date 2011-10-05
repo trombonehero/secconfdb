@@ -273,7 +273,7 @@ def update_conference():
 		'type':      (int,    '`meeting-type`'),
 		'parent':    (int,    'parent'),
 		'url':       (url,    'permanentURL'),
-		'desc':      (str,    'description'),
+		'desc':      (text,   'description'),
 		'tags':      (tags,   'tags'),
 	}
 	conference_id = int(posted['id'])
