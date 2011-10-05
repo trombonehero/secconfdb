@@ -37,7 +37,8 @@ def conference(abbreviation):
 
 	return flask.render_template('conference.html',
 		conference = conference,
-		events = events)
+		events = events,
+		utils = utils)
 
 
 # User preferences.

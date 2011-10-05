@@ -32,7 +32,10 @@ Affiliated with
 <p>{{ conference.description if conference.description }}</p>
 
 </div>
-{{ event.event_table(events, show_proceedings = True) }}
+{{
+	event.event_table(events, utils = utils,
+		show_deadlines = True, show_proceedings = True)
+}}
  
 {% endblock %}
 
