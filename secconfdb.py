@@ -167,10 +167,8 @@ def abbrev(s):
 	if valid_abbrev.match(s): return s
 	else: raise ValueError, "'%s' is not a valid conference abbreviation" % s
 
-valid_text = re.compile('[A-Za-z0-9, \'\-\_\.\(\)]*$')
 def text(s):
-	if valid_text.match(s): return s.replace("'", "\\'")
-	else: raise ValueError, "'%s' is not database-safe text" % s
+	return s.replace("'", "\\'")
 
 valid_tags = re.compile('[a-z ,]+$')
 def tags(s):
