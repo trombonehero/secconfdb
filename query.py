@@ -173,9 +173,8 @@ class Filter(Clause):
 		if len(tags) == 0: return Filter(None)
 
 		patterns = [ "'%d,%%'", "'%%,%d,%%'", "'%%,%d'" ]
-		match = ' OR '.join([ "tags LIKE %s" % p for p in patterns ])
-		sql = ' OR '.join(
-			[ match % (int(i), int(i), int(i)) for i in tags ])
+		match = "tags REGEXP '([0-9]+,)*%d(,[0-9]+)*'"
+		sql = ' OR '.join([ match % i for i in tags ])
 
 		return Filter("(%s)" % sql)
 
