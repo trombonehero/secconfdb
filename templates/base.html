@@ -26,7 +26,7 @@ _gaq.push(['_trackPageview']);
 	{% set hostname = request.host.split(':')[0] %}
 	<body> 
 		<div id="header">
-			<h1>{{ hostname }}</h1>
+			<h1><a href="http://{{ hostname }}/">{{ hostname }}</a></h1>
 			<h2>{{ self.title() }}</h2>
 		</div>
  

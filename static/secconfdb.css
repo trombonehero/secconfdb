@@ -83,12 +83,15 @@ input[readonly]
 }
 
 
-#header h1
+#header h1, #header h1 a
 {
+	color: white;
 	font-family: "Play";
 	position: absolute;
 	right: 0.5em;
 }
+
+#header h1 a:hover { color: #e2d7b6; }
 
 #header h2
 {
