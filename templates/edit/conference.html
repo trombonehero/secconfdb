@@ -12,13 +12,16 @@
 
 	<form action="update_conference" method="post">
 		<input type="hidden" name="id" value="{{ conference.conference }}"/>
-		<input type="hidden" name="abbrev" value="{{ conference.abbreviation }}"/>
 
 		<table>
 			<tbody>
 				<tr>
 					<td>Name</td>
 					<td>{{ controls.textbox('name', conference.name, 60) }}</td>
+				</tr>
+				<tr>
+					<td>Abbreviation</td>
+					<td>{{ controls.textbox('abbrev', conference.abbreviation, 60) }}</td>
 				</tr>
 				<tr>
 					<td>Type</td>
