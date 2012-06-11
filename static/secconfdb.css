@@ -82,6 +82,11 @@ input[readonly]
 	width: 100%;
 }
 
+h1, h2, h3, h4, a
+{
+	font-weight: normal;
+}
+
 
 #header h1, #header h1 a
 {
@@ -149,7 +154,6 @@ a
 {
 	color: #1c3553;
 	font-family: "Droid Sans Bold";
-	font-weight: bold;
 	text-decoration: none;
 }
 
@@ -236,7 +240,6 @@ table.conferences td.tooLate { background: #666; }
 
 .sidebar .head
 {
-	font-weight: bold;
 	text-align: center;
 }
 
