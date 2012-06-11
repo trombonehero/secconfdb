@@ -90,9 +90,9 @@
 					conference.conference }}"/>
 				<input type="hidden" name="abbreviation" value="{{
 					conference.abbreviation }}"/>
+				<td>{{ controls.select('location', locations, None) }}</td>
 				<td>{{ controls.textbox('start', None, 10) }}</td>
 				<td>{{ controls.textbox('end', None, 10) }}</td>
-				<td>{{ controls.select('location', locations, None) }}</td>
 				<td>{{ controls.textbox('deadline', None, 10) }}</td>
 				<td>{{ controls.textbox('extended', None, 10) }}</td>
 				<td>{{ controls.textbox('poster', None, 10) }}</td>
@@ -107,11 +107,11 @@
 				<input type="hidden" name="conference" value="{{ e.abbreviation }}"/>
 				<input type="hidden" name="id" value="{{ e.instance }}"/>
 				<tr>
-					<td>{{ controls.textbox('start', e.startDate, 10) }}</td>
-					<td>{{ controls.textbox('end', e.endDate, 10) }}</td>
 					<td>
 						{{ controls.select('location', locations, e.location_id) }}
 					</td>
+					<td>{{ controls.textbox('start', e.startDate, 10) }}</td>
+					<td>{{ controls.textbox('end', e.endDate, 10) }}</td>
 					<td>{{ controls.textbox('deadline', e.deadline, 10) }}</td>
 					<td>
 						{{ controls.textbox('extended', e.extendedDeadline, 10) }}
