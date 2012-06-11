@@ -2,16 +2,13 @@ import datetime
 import flask
 
 
-def soonness(date):
+def soonness(date, thresholds = [ 0, 7, 28, 90 ]):
 	""" Translate a deadline into a CSS class like 'reallySoon'. """
 	if date is None: return "dateUnspecified"
 
 	days_left = (date - datetime.date.today()).days
-	for (days, category) in (
-			(0, 'tooLate'),
-			(7, 'reallySoon'),
-			(28, 'soon'),
-			(90, 'notSoon')):
+	classes = [ 'tooLate', 'reallySoon', 'soon', 'notSoon' ]
+	for (days, category) in zip(thresholds, classes):
 		if days_left < days: return category
 
 	return ""
