@@ -28,7 +28,9 @@
 						}}</a>
 					{% endif %}
 				</td>
-				<td>{{ c.when() }}</td>
+				<td class="{{ utils.soonness(c.endDate, [ -500, -365, -180, 0 ]) }}">
+					{{ c.when() }}
+				</td>
 				<td>
 					{% if c.url %}
 						<a href="{{ c.url }}" target="_blank">{{
