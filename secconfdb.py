@@ -1,4 +1,5 @@
 #!/usr/bin/python
+# coding: utf8 -*-
 
 import db
 import flask
@@ -22,7 +23,6 @@ def main():
 	# Render from the 'main' template.
 	return flask.render_template('main.html',
 			tags = tag_names,
-			year = 2011,
 			deadlines = db.deadlines(current_tags),
 			upcoming = db.upcoming(current_tags),
 			recent = db.recent(current_tags),
@@ -70,7 +70,6 @@ def setprefs():
 def most_recent():
 	""" What conferences do we need to update? """
 	return flask.render_template('most_recent.html',
-			year = 2011,
 			conferences = db.most_recent(),
 			utils = utils)
 
