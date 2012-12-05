@@ -169,7 +169,7 @@ def abbrev(s):
 def text(s):
 	return s.replace("'", "\\'")
 
-valid_tags = re.compile('[a-z ,]+$')
+valid_tags = re.compile('[a-z0-9 ,]+$')
 def tags(s):
 	if valid_tags.match(s):
 		names = s.split(',')
