@@ -29,6 +29,9 @@ def get_tags(names = None, ids = None):
 	if names is not None:
 		where = Filter("name in ('%s')" % "','".join(names))
 
+	if type(ids) == str:
+		ids = [ str(int(x)) for x in ids.split(',') ]
+
 	if ids is not None:
 		where = Filter("tag in (%s)" % ','.join(ids))
 
