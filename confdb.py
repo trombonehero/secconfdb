@@ -125,6 +125,19 @@ def deadline_calendar():
 
 
 
+@app.route('/edit')
+def edit_menu():
+	return flask.render_template('edit/list.html',
+			conferences = db.conferences(),
+			simple_tables = [
+				'Conferences',
+				'Countries',
+				'Locations',
+				'MeetingTypes',
+				'Regions'
+			]
+		)
+
 # Code for editing conferences and their events.
 @app.route('/edit/conference/<string:abbreviation>')
 def edit_conference(abbreviation):

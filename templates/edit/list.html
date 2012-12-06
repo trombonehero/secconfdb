@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="block">
+	<h2>Simple tables</h2>
+	<p>
+	These are database tables that can be edited as plain text.
+	</p>
+	<ul>
+		{% for name in simple_tables %}
+		<li><a href="edit/simple/{{ name }}">{{ name }}</a></li>
+		{% endfor %}
+	</ul>
+
+	<h2>Conferences</h2>
+	<ul>
+		{% for conf in conferences %}
+			<li>
+				<a href="edit/conference/{{ conf.abbreviation }}">
+					{{ conf.abbreviation }} &mdash; {{ conf.name }}
+				</a>
+			</li>
+		{% endfor %}
+	</ul>
+</div>
+{% endblock %}
+
