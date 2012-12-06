@@ -8,8 +8,8 @@ abspath = os.path.dirname(__file__)
 sys.path.append(abspath)
 os.chdir(abspath)
 
-log_handler = Handler('secconfdb.log')
+log_handler = Handler('wsgi.log')
 log_handler.setLevel(logging.INFO)
 
-from secconfdb import app as application
+from confdb import app as application
 application.logger.addHandler(log_handler)
