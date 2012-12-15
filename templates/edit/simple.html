@@ -20,8 +20,7 @@ Edit table '{{ table }}'
 			<form action="../create" method="post">
 				<input type="hidden" name="table name" value="{{ table }}"/>
 
-				<td>(new)</td>
-				{% for col in headers[1:] %}
+				{% for col in headers %}
 					<td>{{ controls.textbox(col, '') }}</td>
 				{% endfor %}
 				<td><input type="submit" value="Create"/></td>
@@ -38,7 +37,7 @@ Edit table '{{ table }}'
 						<td>
 							{{
 								controls.textbox(
-									col, row.__dict__[col], readonly = (loop.index == 1))
+									col, row.__dict__[col], readonly = False)
 							}}
 						</td>
 					{% endfor %}
