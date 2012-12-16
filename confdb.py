@@ -185,7 +185,7 @@ def text(s):
 valid_tags = re.compile('[a-z0-9 ,]+$')
 def tags(s):
 	if valid_tags.match(s):
-		names = s.split(',')
+		names = [ name.strip() for name in s.split(',') ]
 		values = [ str(i) for (i,name) in db.get_tags(names) ]
 		return ','.join(values)
 	else: raise ValueError, "'%s' is not database-safe text" % s
